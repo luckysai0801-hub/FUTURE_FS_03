@@ -1,602 +1,443 @@
 // =============================================
-// public/js/admin.js
-// Society Manager Admin Panel Operations via REST API
+// admin.js - Society Manager Admin Panel Operations API
 // Skyline Residency – Smart Apartment Portal
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    const path = window.location.pathname;
+    
+    // 1. Dashboard Overview Stats & Data Loader
+    if (window.location.pathname.includes('dashboard') || window.location.pathname === '/admin') {
+        loadDashboardData();
+    }
 
-    // Dispatch page handlers based on URL
-    if (path.endsWith('/dashboard.html') || path.endsWith('/dashboard') || path.endsWith('/admin')) {
-        loadAdminDashboard();
-    } else if (path.includes('admin-complaints.html')) {
-        loadAdminComplaints();
-    } else if (path.includes('admin-complaint-detail.html')) {
-        loadAdminComplaintDetail();
-    } else if (path.includes('admin-announcements.html')) {
+    // 2. Manage Complaints Queue Loader
+    if (window.location.pathname.includes('admin-complaints')) {
+        loadComplaintsList();
+
+        const searchInput = document.getElementById('searchQuery');
+        const statusSelect = document.getElementById('statusFilter');
+        const categorySelect = document.getElementById('categoryFilter');
+
+        if (searchInput) searchInput.addEventListener('input', debounce(loadComplaintsList, 300));
+        if (statusSelect) statusSelect.addEventListener('change', loadComplaintsList);
+        if (categorySelect) categorySelect.addEventListener('change', loadComplaintsList);
+    }
+
+    // 3. Complaint Detail View Loader
+    if (window.location.pathname.includes('admin-complaint-detail')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticketId = urlParams.get('id');
+        if (ticketId) loadComplaintDetail(ticketId);
+    }
+
+    // 4. Announcements Manager Loader
+    if (window.location.pathname.includes('admin-announcements')) {
         loadAdminAnnouncements();
-    } else if (path.includes('admin-users.html')) {
-        loadAdminUsers();
-    } else if (path.includes('admin-reports.html')) {
-        loadAdminReports();
-    }
-});
 
-// Helper: Escape HTML to prevent XSS vulnerability
-function escapeHtml(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
+        const form = document.getElementById('createAnnouncementForm');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('announcementTitle').value.trim();
+                const category = document.getElementById('announcementCategory').value;
+                const priority = document.getElementById('announcementPriority').value;
+                const content = document.getElementById('announcementContent').value.trim();
 
-// =============================================
-// 1. ADMIN DASHBOARD HANDLER
-// =============================================
-async function loadAdminDashboard() {
-    try {
-        const res = await fetch('/api/admin/dashboard');
-        if (res.status === 401) {
-            window.location.href = '/admin-login.html';
-            return;
-        }
-        const data = await res.json();
-        if (!data.success) return;
-
-        const s = data.stats || {};
-        document.getElementById('statTotal').textContent = s.total || 0;
-        document.getElementById('statPending').textContent = s.pending || 0;
-        document.getElementById('statInProgress').textContent = s.in_progress || 0;
-        document.getElementById('statResolved').textContent = s.resolved || 0;
-        document.getElementById('statRejected').textContent = s.rejected || 0;
-        document.getElementById('statActiveRequests').textContent = s.maintenanceRequests || 0;
-        document.getElementById('statTotalUsers').textContent = s.totalUsers || 0;
-        document.getElementById('statAnnouncements').textContent = s.announcementsCount || 0;
-
-        // Populate Recent 10 Complaints Table
-        const tbody = document.getElementById('recentComplaintsBody');
-        if (data.recentComplaints && data.recentComplaints.length > 0) {
-            tbody.innerHTML = data.recentComplaints.map(c => `
-                <tr style="border-bottom: 1px solid var(--border-light);">
-                    <td style="padding: 0.75rem; font-family: monospace; font-weight: 700; color: var(--primary);">${escapeHtml(c.complaint_id)}</td>
-                    <td style="padding: 0.75rem;">${escapeHtml(c.user_name || c.resident_name)}</td>
-                    <td style="padding: 0.75rem;"><span class="badge" style="background: var(--primary-light); color: var(--primary);">${escapeHtml(c.category)}</span></td>
-                    <td style="padding: 0.75rem;">${escapeHtml(c.department || c.block_wing)}</td>
-                    <td style="padding: 0.75rem;">${escapeHtml(c.priority)}</td>
-                    <td style="padding: 0.75rem;">${getStatusBadgeHtml(c.status)}</td>
-                    <td style="padding: 0.75rem;">
-                        <a href="/admin-complaint-detail.html?id=${c.id}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-eye"></i> Inspect
-                        </a>
-                    </td>
-                </tr>
-            `).join('');
-        } else {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">No complaints recorded yet.</td></tr>';
-        }
-
-        // Category breakdown
-        const catContainer = document.getElementById('categoryBreakdown');
-        if (data.byCategory && data.byCategory.length > 0) {
-            catContainer.innerHTML = data.byCategory.map(item => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: var(--bg); border-radius: var(--radius-xs);">
-                    <span style="font-size: 0.9rem; font-weight: 600;">${escapeHtml(item.category)}</span>
-                    <strong class="badge badge-in-progress">${item.count} tickets</strong>
-                </div>
-            `).join('');
-        } else {
-            catContainer.innerHTML = '<p style="color: var(--text-muted);">No category data available.</p>';
-        }
-
-        // Department breakdown
-        const deptContainer = document.getElementById('departmentBreakdown');
-        if (data.byDepartment && data.byDepartment.length > 0) {
-            deptContainer.innerHTML = data.byDepartment.map(item => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: var(--bg); border-radius: var(--radius-xs);">
-                    <span style="font-size: 0.9rem; font-weight: 600;">${escapeHtml(item.department)}</span>
-                    <strong class="badge badge-resolved">${item.count} tickets</strong>
-                </div>
-            `).join('');
-        } else {
-            deptContainer.innerHTML = '<p style="color: var(--text-muted);">No department data available.</p>';
-        }
-
-    } catch (err) {
-        console.error('Dashboard load error:', err);
-    }
-}
-
-// =============================================
-// 2. ADMIN COMPLAINTS LIST HANDLER
-// =============================================
-async function loadAdminComplaints() {
-    const filterForm = document.getElementById('complaintsFilterForm');
-    const resetBtn = document.getElementById('resetFilterBtn');
-
-    if (filterForm) {
-        filterForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            fetchFilteredComplaints();
-        });
-
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                filterForm.reset();
-                fetchFilteredComplaints();
+                try {
+                    const res = await fetch('/api/admin/announcements', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, category, priority, content })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        form.reset();
+                        loadAdminAnnouncements();
+                    } else {
+                        alert(data.error || 'Failed to broadcast announcement.');
+                    }
+                } catch (err) {
+                    console.error('Create Announcement Error:', err);
+                }
             });
         }
     }
 
-    fetchFilteredComplaints();
-}
+    // 5. Resident Directory Loader
+    if (window.location.pathname.includes('admin-users')) {
+        loadResidentDirectory();
+    }
 
-async function fetchFilteredComplaints() {
-    const tbody = document.getElementById('complaintsTableBody');
-    const countBadge = document.getElementById('recordCountBadge');
+    // 6. Reports & Analytics Loader
+    if (window.location.pathname.includes('admin-reports')) {
+        loadReportsData();
+    }
+});
 
-    const search = document.getElementById('filterSearch') ? document.getElementById('filterSearch').value.trim() : '';
-    const status = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : '';
-    const category = document.getElementById('filterCategory') ? document.getElementById('filterCategory').value : '';
-    const priority = document.getElementById('filterPriority') ? document.getElementById('filterPriority').value : '';
-
-    const params = new URLSearchParams();
-    if (search) params.append('search', search);
-    if (status) params.append('status', status);
-    if (category) params.append('category', category);
-    if (priority) params.append('priority', priority);
-
+// Helper: Fetch Dashboard Stats
+async function loadDashboardData() {
     try {
-        const res = await fetch(`/api/admin/complaints?${params.toString()}`);
-        if (res.status === 401) {
-            window.location.href = '/admin-login.html';
-            return;
-        }
+        const res = await fetch('/api/admin/dashboard');
         const data = await res.json();
 
-        if (!data.success || !data.complaints) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #DC2626;">Error loading complaints.</td></tr>';
-            return;
+        if (data.success && data.stats) {
+            setElemText('statTotal', data.stats.total || 0);
+            setElemText('statPending', data.stats.pending || 0);
+            setElemText('statInProgress', data.stats.in_progress || 0);
+            setElemText('statResolved', data.stats.resolved || 0);
+            setElemText('statRejected', data.stats.rejected || 0);
+            setElemText('statUsers', data.stats.totalUsers || 0);
+
+            // Recent complaints table
+            const recentTableBody = document.getElementById('recentComplaintsBody');
+            if (recentTableBody && data.recentComplaints) {
+                if (data.recentComplaints.length === 0) {
+                    recentTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No recent complaints found.</td></tr>';
+                } else {
+                    recentTableBody.innerHTML = data.recentComplaints.map(c => `
+                        <tr>
+                            <td><strong style="font-family: monospace; color: var(--primary);">${c.complaint_id}</strong></td>
+                            <td>${c.resident_name} (${c.flat_number})</td>
+                            <td>${c.category}</td>
+                            <td><span class="badge badge-${c.status.toLowerCase().replace(/\s+/g, '-')}">${c.status}</span></td>
+                            <td>${new Date(c.created_at).toLocaleDateString('en-IN')}</td>
+                            <td>
+                                <a href="/admin-complaint-detail.html?id=${c.id}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            // Category breakdown bars
+            const breakdownElem = document.getElementById('categoryBreakdown');
+            if (breakdownElem && data.byCategory) {
+                const maxCount = Math.max(...data.byCategory.map(x => x.count), 1);
+                breakdownElem.innerHTML = data.byCategory.map(cat => `
+                    <div style="margin-bottom: 0.85rem;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem;">
+                            <span>${cat.category}</span>
+                            <span>${cat.count} ticket${cat.count > 1 ? 's' : ''}</span>
+                        </div>
+                        <div style="height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: ${(cat.count / maxCount) * 100}%; background: var(--primary); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
-
-        const complaints = data.complaints;
-        countBadge.textContent = `Showing ${complaints.length} Complaints`;
-
-        if (complaints.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-muted);"><i class="fas fa-inbox fa-2x" style="margin-bottom: 0.5rem; display:block;"></i>No matching complaints found.</td></tr>';
-            return;
-        }
-
-        tbody.innerHTML = complaints.map(c => `
-            <tr style="border-bottom: 1px solid var(--border-light);">
-                <td style="padding: 0.75rem; font-family: monospace; font-weight: 700; color: var(--primary);">${escapeHtml(c.complaint_id)}</td>
-                <td style="padding: 0.75rem;">
-                    <strong>${escapeHtml(c.user_name || c.resident_name)}</strong><br>
-                    <small style="color: var(--text-muted);">${escapeHtml(c.mobile_number || '')}</small>
-                </td>
-                <td style="padding: 0.75rem;">${escapeHtml(c.department || (c.block_wing + ' - ' + c.flat_number))}</td>
-                <td style="padding: 0.75rem;">
-                    <strong>${escapeHtml(c.title)}</strong><br>
-                    <span class="badge" style="background: var(--primary-light); color: var(--primary); font-size: 0.75rem;">${escapeHtml(c.category)}</span>
-                </td>
-                <td style="padding: 0.75rem;">${escapeHtml(c.priority)}</td>
-                <td style="padding: 0.75rem;">${getStatusBadgeHtml(c.status)}</td>
-                <td style="padding: 0.75rem;">
-                    <a href="/admin-complaint-detail.html?id=${c.id}" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-edit"></i> Inspect & Update
-                    </a>
-                </td>
-            </tr>
-        `).join('');
-
     } catch (err) {
-        console.error('Fetch complaints error:', err);
+        console.error('Load Dashboard Error:', err);
     }
 }
 
-// =============================================
-// 3. ADMIN COMPLAINT DETAIL WORKSPACE HANDLER
-// =============================================
-async function loadAdminComplaintDetail() {
+// Helper: Fetch Complaints List Queue
+async function loadComplaintsList() {
+    const listBody = document.getElementById('complaintsTableBody');
+    if (!listBody) return;
+
+    const search = (document.getElementById('searchQuery')?.value || '').trim();
+    const status = document.getElementById('statusFilter')?.value || '';
+    const category = document.getElementById('categoryFilter')?.value || '';
+
+    try {
+        const queryParams = new URLSearchParams({ search, status, category });
+        const res = await fetch(`/api/admin/complaints?${queryParams.toString()}`);
+        const data = await res.json();
+
+        if (data.success && data.complaints) {
+            if (data.complaints.length === 0) {
+                listBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">No complaint records matching current filters.</td></tr>';
+            } else {
+                listBody.innerHTML = data.complaints.map(c => `
+                    <tr>
+                        <td><strong style="font-family: monospace; color: var(--primary);">${c.complaint_id}</strong></td>
+                        <td>
+                            <strong>${c.resident_name}</strong><br>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">${c.flat_number} (${c.block_wing})</span>
+                        </td>
+                        <td>${c.category}</td>
+                        <td><span class="badge badge-${c.status.toLowerCase().replace(/\s+/g, '-')}">${c.status}</span></td>
+                        <td><span style="font-weight:700; color: ${c.priority === 'High' ? '#EF4444' : (c.priority === 'Medium' ? '#F59E0B' : '#10B981')};">${c.priority}</span></td>
+                        <td>${new Date(c.created_at).toLocaleDateString('en-IN')}</td>
+                        <td>
+                            <div style="display:flex; gap:0.4rem;">
+                                <a href="/admin-complaint-detail.html?id=${c.id}" class="btn btn-sm btn-outline-primary" title="View Detail">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button onclick="openStatusModal(${c.id}, '${c.status}', '${(c.admin_remarks || '').replace(/'/g, "\\'")}')" class="btn btn-sm btn-primary" title="Update Status">
+                                    <i class="fas fa-pen-to-square"></i>
+                                </button>
+                                <button onclick="deleteTicket(${c.id})" class="btn btn-sm btn-outline-danger" title="Delete Ticket">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+    } catch (err) {
+        console.error('Load Complaints Error:', err);
+    }
+}
+
+// Helper: Status Update Modal Controls
+function openStatusModal(ticketId, currentStatus, currentRemarks) {
+    const modal = document.getElementById('statusModal');
+    const idInput = document.getElementById('modalTicketId');
+    const statusSelect = document.getElementById('modalStatus');
+    const remarksInput = document.getElementById('modalRemarks');
+
+    if (modal && idInput && statusSelect) {
+        idInput.value = ticketId;
+        statusSelect.value = currentStatus;
+        if (remarksInput) remarksInput.value = currentRemarks || '';
+        modal.style.display = 'flex';
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('statusModal');
+    if (modal) modal.style.display = 'none';
+}
+
+async function submitStatusUpdate() {
+    const ticketId = document.getElementById('modalTicketId')?.value;
+    const new_status = document.getElementById('modalStatus')?.value;
+    const remarks = document.getElementById('modalRemarks')?.value;
+
+    if (!ticketId || !new_status) return;
+
+    try {
+        const res = await fetch(`/api/admin/complaints/${ticketId}/status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ new_status, remarks })
+        });
+        const data = await res.json();
+        if (data.success) {
+            closeModal();
+            if (window.location.pathname.includes('admin-complaint-detail')) {
+                loadComplaintDetail(ticketId);
+            } else {
+                loadComplaintsList();
+            }
+        } else {
+            alert(data.error || 'Failed to update ticket status.');
+        }
+    } catch (err) {
+        console.error('Update Status Error:', err);
+    }
+}
+
+async function deleteTicket(ticketId) {
+    if (!confirm('Are you sure you want to delete this complaint record permanently?')) return;
+
+    try {
+        const res = await fetch(`/api/admin/complaints/${ticketId}/delete`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+            loadComplaintsList();
+        } else {
+            alert(data.error || 'Failed to delete record.');
+        }
+    } catch (err) {
+        console.error('Delete Ticket Error:', err);
+    }
+}
+
+// Helper: Load Single Complaint Detail
+async function loadComplaintDetail(ticketId) {
+    try {
+        const res = await fetch(`/api/admin/complaints/${ticketId}`);
+        const data = await res.json();
+
+        if (data.success && data.complaint) {
+            const c = data.complaint;
+            setElemText('detailTicketId', c.complaint_id);
+            setElemText('detailResident', `${c.resident_name} (${c.flat_number}, ${c.block_wing})`);
+            setElemText('detailContact', `${c.mobile_number} | ${c.email || 'No email provided'}`);
+            setElemText('detailCategory', c.category);
+            setElemText('detailTitle', c.title);
+            setElemText('detailDescription', c.description);
+            setElemText('detailAssignedTo', c.assigned_to || 'Unassigned');
+            setElemText('detailRemarks', c.admin_remarks || 'No notes posted.');
+            setElemText('detailDate', new Date(c.created_at).toLocaleString('en-IN'));
+
+            const statusBadge = document.getElementById('detailStatusBadge');
+            if (statusBadge) {
+                statusBadge.innerText = c.status;
+                statusBadge.className = `badge badge-${c.status.toLowerCase().replace(/\s+/g, '-')}`;
+            }
+
+            const assignedInput = document.getElementById('assignedToInput');
+            if (assignedInput) assignedInput.value = c.assigned_to || '';
+            const remarksInput = document.getElementById('adminRemarksInput');
+            if (remarksInput) remarksInput.value = c.admin_remarks || '';
+
+            // Image attachment preview
+            const imageElem = document.getElementById('detailImage');
+            const imageLink = document.getElementById('detailImageLink');
+            const imageWrap = document.getElementById('imageWrap');
+            if (c.image_path && imageElem && imageWrap) {
+                imageElem.src = c.image_path;
+                if (imageLink) imageLink.href = c.image_path;
+                imageWrap.style.display = 'block';
+            } else if (imageWrap) {
+                imageWrap.style.display = 'none';
+            }
+
+            // Render Timeline
+            const timelineElem = document.getElementById('detailTimeline');
+            if (timelineElem && data.updates) {
+                timelineElem.innerHTML = data.updates.map(u => `
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-time">${new Date(u.updated_at).toLocaleString('en-IN')}</div>
+                            <div class="timeline-title">Status changed to "${u.new_status}"</div>
+                            <p style="font-size:0.85rem; color: var(--text-muted); margin-top:0.25rem;">
+                                ${u.remarks ? `Remarks: ${u.remarks}` : 'No remarks posted.'}
+                            </p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch (err) {
+        console.error('Load Detail Error:', err);
+    }
+}
+
+// Helper: Save Ticket Details (Staff Assignment & Remarks)
+async function saveTicketDetails() {
     const urlParams = new URLSearchParams(window.location.search);
-    const dbId = urlParams.get('id');
+    const ticketId = urlParams.get('id');
+    const assigned_to = document.getElementById('assignedToInput')?.value;
+    const admin_remarks = document.getElementById('adminRemarksInput')?.value;
 
-    if (!dbId) {
-        alert('Invalid complaint ID parameter.');
-        window.location.href = '/admin-complaints.html';
-        return;
-    }
+    if (!ticketId) return;
 
-    // Load complaint detail data
     try {
-        const res = await fetch(`/api/admin/complaints/${dbId}`);
-        if (res.status === 401) {
-            window.location.href = '/admin-login.html';
-            return;
-        }
+        const res = await fetch(`/api/admin/complaints/${ticketId}/details`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ assigned_to, admin_remarks })
+        });
         const data = await res.json();
-
-        if (!data.success || !data.complaint) {
-            alert('Complaint record not found.');
-            window.location.href = '/admin-complaints.html';
-            return;
+        if (data.success) {
+            alert('Staff assignment & management notes saved successfully!');
+            loadComplaintDetail(ticketId);
+        } else {
+            alert(data.error || 'Failed to update details.');
         }
-
-        const c = data.complaint;
-        const updates = data.updates || [];
-
-        // Render card info
-        document.getElementById('detailIdBadge').textContent = c.complaint_id;
-        document.getElementById('detailTitle').textContent = c.title;
-        document.getElementById('detailResident').textContent = c.resident_name || c.user_name;
-        document.getElementById('detailMobile').textContent = c.mobile_number || c.user_phone || 'N/A';
-        document.getElementById('detailEmail').textContent = c.email || c.user_email || 'N/A';
-        document.getElementById('detailLocation').textContent = c.department || `${c.block_wing} - ${c.flat_number}`;
-        document.getElementById('detailCategory').textContent = c.category;
-        document.getElementById('detailPriority').textContent = `${c.priority} Priority`;
-        document.getElementById('detailDescription').textContent = c.description;
-
-        const statusBadge = document.getElementById('detailStatusBadge');
-        statusBadge.textContent = c.status;
-        statusBadge.className = 'badge ' + getStatusBadgeClass(c.status);
-
-        // Pre-fill update status select & remarks
-        const statusSelect = document.getElementById('new_status');
-        if (statusSelect) statusSelect.value = c.status;
-        if (document.getElementById('statusRemarks')) document.getElementById('statusRemarks').value = c.admin_remarks || '';
-        if (document.getElementById('assigned_to')) document.getElementById('assigned_to').value = c.assigned_to || '';
-        if (document.getElementById('admin_remarks')) document.getElementById('admin_remarks').value = c.admin_remarks || '';
-
-        // Image attachment
-        if (c.image_path) {
-            document.getElementById('detailImageSection').style.display = 'block';
-            document.getElementById('detailImage').src = c.image_path;
-            document.getElementById('detailImageLink').href = c.image_path;
-        }
-
-        // Audit timeline
-        renderAdminAuditTimeline(updates);
-
     } catch (err) {
-        console.error('Detail load error:', err);
-    }
-
-    // Handle Update Status Form Submission
-    const updateStatusForm = document.getElementById('updateStatusForm');
-    if (updateStatusForm) {
-        updateStatusForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const new_status = document.getElementById('new_status').value;
-            const remarks = document.getElementById('statusRemarks').value.trim();
-
-            try {
-                const res = await fetch(`/api/admin/complaints/${dbId}/status`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ new_status, remarks })
-                });
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    showDetailAlert(data.message || 'Status updated successfully!', 'success');
-                    setTimeout(() => location.reload(), 800);
-                } else {
-                    showDetailAlert(data.error || 'Failed to update status.', 'error');
-                }
-            } catch (err) {
-                showDetailAlert('Error saving status update.', 'error');
-            }
-        });
-    }
-
-    // Handle Staff Assignment Form Submission
-    const updateDetailsForm = document.getElementById('updateDetailsForm');
-    if (updateDetailsForm) {
-        updateDetailsForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const assigned_to = document.getElementById('assigned_to').value.trim();
-            const admin_remarks = document.getElementById('admin_remarks').value.trim();
-
-            try {
-                const res = await fetch(`/api/admin/complaints/${dbId}/details`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ assigned_to, admin_remarks })
-                });
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    showDetailAlert(data.message || 'Staff assignment saved!', 'success');
-                    setTimeout(() => location.reload(), 800);
-                } else {
-                    showDetailAlert(data.error || 'Failed to save details.', 'error');
-                }
-            } catch (err) {
-                showDetailAlert('Error saving details.', 'error');
-            }
-        });
-    }
-
-    // Delete Button Handler
-    const deleteBtn = document.getElementById('deleteTicketBtn');
-    if (deleteBtn) {
-        deleteBtn.addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to permanently delete this complaint record?')) return;
-
-            try {
-                const res = await fetch(`/api/admin/complaints/${dbId}`, { method: 'DELETE' });
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    alert('Complaint deleted.');
-                    window.location.href = '/admin-complaints.html';
-                } else {
-                    alert(data.error || 'Delete failed.');
-                }
-            } catch (err) {
-                alert('Error deleting complaint.');
-            }
-        });
+        console.error('Save Details Error:', err);
     }
 }
 
-function renderAdminAuditTimeline(updates) {
-    const container = document.getElementById('detailUpdatesTimeline');
-    if (!updates || updates.length === 0) {
-        container.innerHTML = '<p style="color: var(--text-muted);">No status updates recorded yet.</p>';
-        return;
-    }
-
-    container.innerHTML = updates.map(u => {
-        const timeStr = new Date(u.updated_at).toLocaleDateString('en-IN', {
-            day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-        });
-
-        return `
-            <div style="padding: 1rem; border-left: 3px solid var(--primary); background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 0.85rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                    <strong>Changed: ${escapeHtml(u.old_status || 'Pending')} &rarr; ${escapeHtml(u.new_status)}</strong>
-                    <small style="color: var(--text-muted);">${timeStr}</small>
-                </div>
-                ${u.remarks ? `<p style="margin: 0.25rem 0; font-size: 0.88rem; color: var(--text-dark);">${escapeHtml(u.remarks)}</p>` : ''}
-                <small style="color: var(--text-muted); font-size: 0.8rem;">By: ${escapeHtml(u.updated_by_name || 'Admin')}</small>
-            </div>
-        `;
-    }).join('');
-}
-
-function showDetailAlert(msg, type = 'error') {
-    const alertBox = document.getElementById('detailAlert');
-    if (!alertBox) return;
-    const isSuccess = type === 'success';
-    alertBox.style.display = 'block';
-    alertBox.innerHTML = `
-        <div style="background: ${isSuccess ? '#D1FAE5' : '#FEE2E2'}; color: ${isSuccess ? '#059669' : '#DC2626'}; border: 1px solid ${isSuccess ? '#A7F3D0' : '#FECACA'}; padding: 0.85rem 1.25rem; border-radius: var(--radius-sm);">
-            <i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${escapeHtml(msg)}
-        </div>
-    `;
-}
-
-// =============================================
-// 4. ADMIN ANNOUNCEMENTS HANDLER
-// =============================================
+// Helper: Load Admin Announcements Table
 async function loadAdminAnnouncements() {
-    fetchAdminAnnouncements();
+    const tbody = document.getElementById('adminAnnouncementsBody');
+    if (!tbody) return;
 
-    const createForm = document.getElementById('createAnnouncementForm');
-    if (createForm) {
-        createForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const title = document.getElementById('announcementTitle').value.trim();
-            const category = document.getElementById('announcementCategory').value;
-            const priority = document.getElementById('announcementPriority').value;
-            const content = document.getElementById('announcementContent').value.trim();
-
-            if (!title || !content) {
-                alert('Title and Content are required.');
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/admin/announcements', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, category, priority, content })
-                });
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    createForm.reset();
-                    fetchAdminAnnouncements();
-                } else {
-                    alert(data.error || 'Failed to create announcement.');
-                }
-            } catch (err) {
-                alert('Error broadcasting announcement.');
-            }
-        });
-    }
-}
-
-async function fetchAdminAnnouncements() {
-    const container = document.getElementById('adminAnnouncementsList');
     try {
         const res = await fetch('/api/admin/announcements');
-        if (res.status === 401) {
-            window.location.href = '/admin-login.html';
-            return;
-        }
         const data = await res.json();
 
-        if (!data.success || !data.announcements || data.announcements.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No active broadcast announcements.</p>';
-            return;
+        if (data.success && data.announcements) {
+            tbody.innerHTML = data.announcements.map(a => `
+                <tr>
+                    <td><strong>${a.title}</strong></td>
+                    <td><span class="badge badge-in-progress">${a.category || 'Notice'}</span></td>
+                    <td><span style="font-weight:700; color: ${a.priority === 'High' ? '#EF4444' : '#10B981'};">${a.priority || 'Medium'}</span></td>
+                    <td>${new Date(a.created_at).toLocaleDateString('en-IN')}</td>
+                    <td>
+                        <button onclick="deleteAnnouncement(${a.id})" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
-
-        container.innerHTML = data.announcements.map(a => `
-            <div style="padding: 1rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm); position: relative; background: var(--bg);">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                    <strong>${escapeHtml(a.title)}</strong>
-                    <button onclick="deleteAnnouncement(${a.id})" class="btn btn-sm btn-outline-danger" title="Delete Announcement">
-                        <i class="fas fa-trash-can"></i>
-                    </button>
-                </div>
-                <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.5rem; white-space: pre-line;">${escapeHtml(a.content)}</p>
-                <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 1rem;">
-                    <span>Priority: ${escapeHtml(a.priority)}</span>
-                    <span>Category: ${escapeHtml(a.category)}</span>
-                </div>
-            </div>
-        `).join('');
-
     } catch (err) {
-        console.error('Fetch announcements error:', err);
+        console.error('Load Admin Announcements Error:', err);
     }
 }
 
 async function deleteAnnouncement(id) {
-    if (!confirm('Are you sure you want to delete this announcement?')) return;
+    if (!confirm('Delete this announcement notice?')) return;
     try {
-        const res = await fetch(`/api/admin/announcements/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/admin/announcements/${id}/delete`, { method: 'POST' });
         const data = await res.json();
-        if (res.ok && data.success) {
-            fetchAdminAnnouncements();
-        } else {
-            alert(data.error || 'Delete failed.');
-        }
-    } catch (e) {
-        alert('Delete failed.');
+        if (data.success) loadAdminAnnouncements();
+    } catch (err) {
+        console.error('Delete Announcement Error:', err);
     }
 }
 
-// =============================================
-// 5. ADMIN RESIDENT DIRECTORY HANDLER
-// =============================================
-async function loadAdminUsers() {
+// Helper: Load Resident Directory
+async function loadResidentDirectory() {
     const tbody = document.getElementById('usersTableBody');
-    const badge = document.getElementById('userCountBadge');
+    if (!tbody) return;
 
     try {
         const res = await fetch('/api/admin/users');
-        if (res.status === 401) {
-            window.location.href = '/admin-login.html';
-            return;
-        }
         const data = await res.json();
 
-        if (!data.success || !data.users || data.users.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">No resident profiles found.</td></tr>';
-            return;
-        }
-
-        const users = data.users;
-        badge.textContent = `${users.length} Active Residents`;
-
-        tbody.innerHTML = users.map(u => `
-            <tr style="border-bottom: 1px solid var(--border-light);">
-                <td style="padding: 0.75rem;"><strong>${escapeHtml(u.full_name)}</strong></td>
-                <td style="padding: 0.75rem;">${escapeHtml(u.phone || '-')}</td>
-                <td style="padding: 0.75rem;">${escapeHtml(u.email || '-')}</td>
-                <td style="padding: 0.75rem;">${escapeHtml(u.location)}</td>
-                <td style="padding: 0.75rem;"><span class="badge badge-in-progress">${u.complaint_count} tickets</span></td>
-                <td style="padding: 0.75rem;">${new Date(u.created_at).toLocaleDateString('en-IN')}</td>
-            </tr>
-        `).join('');
-
-    } catch (err) {
-        console.error('Load users error:', err);
-    }
-}
-
-// =============================================
-// 6. ADMIN REPORTS & ANALYTICS HANDLER
-// =============================================
-async function loadAdminReports() {
-    try {
-        const res = await fetch('/api/admin/reports');
-        if (res.status === 401) {
-            window.location.href = '/admin-login.html';
-            return;
-        }
-        const data = await res.json();
-
-        if (!data.success) return;
-
-        const s = data.stats || {};
-        const total = s.total || 0;
-        const resolved = s.resolved || 0;
-        const rate = total > 0 ? Math.round((resolved / total) * 100) : 0;
-
-        document.getElementById('reportResolutionRate').textContent = `${rate}%`;
-        document.getElementById('reportTotal').textContent = total;
-        document.getElementById('reportResolved').textContent = resolved;
-        document.getElementById('reportPending').textContent = s.pending || 0;
-
-        // Category breakdown table
-        const catBody = document.getElementById('reportCategoryBody');
-        if (data.byCategory && data.byCategory.length > 0) {
-            catBody.innerHTML = data.byCategory.map(c => {
-                const cRate = c.count > 0 ? Math.round(((c.resolved || 0) / c.count) * 100) : 0;
-                return `
-                    <tr style="border-bottom: 1px solid var(--border-light);">
-                        <td style="padding: 0.5rem 0.75rem;"><strong>${escapeHtml(c.category)}</strong></td>
-                        <td style="padding: 0.5rem 0.75rem;">${c.count}</td>
-                        <td style="padding: 0.5rem 0.75rem; color: #10B981;">${c.resolved || 0}</td>
-                        <td style="padding: 0.5rem 0.75rem;">${cRate}%</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Department breakdown table
-        const deptBody = document.getElementById('reportDepartmentBody');
-        if (data.byDepartment && data.byDepartment.length > 0) {
-            deptBody.innerHTML = data.byDepartment.map(d => {
-                const dRate = d.count > 0 ? Math.round(((d.resolved || 0) / d.count) * 100) : 0;
-                return `
-                    <tr style="border-bottom: 1px solid var(--border-light);">
-                        <td style="padding: 0.5rem 0.75rem;"><strong>${escapeHtml(d.department)}</strong></td>
-                        <td style="padding: 0.5rem 0.75rem;">${d.count}</td>
-                        <td style="padding: 0.5rem 0.75rem; color: #10B981;">${d.resolved || 0}</td>
-                        <td style="padding: 0.5rem 0.75rem;">${dRate}%</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Recent resolved tickets
-        const resolvedBody = document.getElementById('reportRecentResolvedBody');
-        if (data.recentResolved && data.recentResolved.length > 0) {
-            resolvedBody.innerHTML = data.recentResolved.map(r => `
-                <tr style="border-bottom: 1px solid var(--border-light);">
-                    <td style="padding: 0.75rem; font-family: monospace; font-weight: 700; color: var(--primary);">${escapeHtml(r.complaint_id)}</td>
-                    <td style="padding: 0.75rem;">${escapeHtml(r.title)}</td>
-                    <td style="padding: 0.75rem;">${escapeHtml(r.category)}</td>
-                    <td style="padding: 0.75rem;">${escapeHtml(r.user_name)}</td>
-                    <td style="padding: 0.75rem;">${new Date(r.updated_at).toLocaleDateString('en-IN')}</td>
+        if (data.success && data.users) {
+            tbody.innerHTML = data.users.map(u => `
+                <tr>
+                    <td><strong>${u.full_name}</strong></td>
+                    <td>${u.location}</td>
+                    <td>${u.phone}</td>
+                    <td>${u.email || 'N/A'}</td>
+                    <td><span class="badge badge-in-progress">${u.complaint_count} ticket${u.complaint_count > 1 ? 's' : ''}</span></td>
+                    <td>${new Date(u.created_at).toLocaleDateString('en-IN')}</td>
                 </tr>
             `).join('');
         }
-
     } catch (err) {
-        console.error('Load reports error:', err);
+        console.error('Load Resident Directory Error:', err);
     }
 }
 
-// Helpers
-function getStatusBadgeHtml(status) {
-    const cls = getStatusBadgeClass(status);
-    return `<span class="badge ${cls}">${escapeHtml(status)}</span>`;
+// Helper: Load Reports Data
+async function loadReportsData() {
+    try {
+        const res = await fetch('/api/admin/reports');
+        const data = await res.json();
+
+        if (data.success && data.stats) {
+            const total = data.stats.total || 1;
+            const resolved = data.stats.resolved || 0;
+            const resPercent = Math.round((resolved / total) * 100);
+
+            setElemText('reportTotal', total);
+            setElemText('reportResolved', resolved);
+            setElemText('reportPending', data.stats.pending || 0);
+            setElemText('reportRatePercent', `${resPercent}%`);
+
+            const barElem = document.getElementById('resolutionProgressBar');
+            if (barElem) barElem.style.width = `${resPercent}%`;
+        }
+    } catch (err) {
+        console.error('Load Reports Error:', err);
+    }
 }
 
-function getStatusBadgeClass(status) {
-    if (status === 'Pending') return 'badge-pending';
-    if (status === 'In Progress') return 'badge-in-progress';
-    if (status === 'Resolved') return 'badge-resolved';
-    if (status === 'Rejected') return 'badge-rejected';
-    return 'badge-pending';
+function setElemText(id, val) {
+    const elem = document.getElementById(id);
+    if (elem) elem.innerText = val;
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
 }

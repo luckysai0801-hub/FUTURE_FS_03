@@ -6,17 +6,12 @@
     <title>Skyline Residency – Smart Apartment Complaint & Maintenance Portal</title>
     <meta name="description" content="Commercial-grade smart apartment maintenance and complaint management portal for Skyline Residency community. Register, track, and manage residential requests 24/7 without login.">
     <meta name="keywords" content="Skyline Residency, Apartment Maintenance, Complaint Management, Society Portal, Residential Maintenance">
-    
-    <!-- Open Graph Metadata -->
-    <meta property="og:title" content="Skyline Residency – Smart Apartment Complaint & Maintenance Portal">
-    <meta property="og:description" content="Submit maintenance requests, track progress in real-time with Complaint ID, and enjoy hassle-free residential community living.">
-    <meta property="og:type" content="website">
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
@@ -33,160 +28,240 @@
         <div class="hero-grid">
             <div class="hero-content">
                 <div class="hero-badge">
-                    <i class="fas fa-shield-alt"></i> Public Resident Maintenance Gateway (No Login Required)
+                    <i class="fas fa-shield-halved"></i> 24/7 Resident Maintenance Portal
                 </div>
-                <h1>
-                    Smart Complaint Management for <span>Modern Apartment</span> Communities
-                </h1>
+                <h1>Smart Complaint Management for <span>Apartment Communities</span></h1>
                 <p class="hero-subtitle">
-                    Submit maintenance requests, track progress in real-time, and enjoy hassle-free community living with instant Complaint ID dispatch.
+                    Submit maintenance requests, track progress in real-time with automated Complaint IDs, and enjoy hassle-free community living with instant administrative dispatch.
                 </p>
                 <div class="hero-buttons">
-                    <a href="/complaint.html" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
-                        <i class="fas fa-plus-circle"></i> Register Complaint
+                    <a href="/complaint.html" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Register Complaint
                     </a>
-                    <a href="/track.html" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
-                        <i class="fas fa-search-location"></i> Track Complaint
+                    <a href="/track.html" class="btn btn-outline-primary">
+                        <i class="fas fa-magnifying-glass"></i> Track Ticket Status
                     </a>
                 </div>
             </div>
-            
-            <div class="hero-card">
+
+            <div class="hero-card reveal">
                 <div class="hero-card-icon">
-                    <i class="fas fa-tools"></i>
+                    <i class="fas fa-headset"></i>
                 </div>
-                <h3 style="font-size: 1.4rem; margin-bottom: 0.75rem;">Instant Ticket Tracking</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-                    Submit your issue freely and receive an automated Complaint ID (e.g. CMP-2026-000145) for 24/7 status tracking.
+                <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Instant Maintenance Helpdesk</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    No login required for residents. Instant Complaint ID dispatched for continuous 24x7 tracking.
                 </p>
-                <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <strong style="font-size: 0.88rem; color: var(--primary);"><i class="fas fa-ticket-alt"></i> CMP-2026-000102 – Elevator Fix</strong>
-                        <span class="badge badge-in-progress">In Progress</span>
+                <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; display: block;">SAMPLE COMPLAINT ID</span>
+                        <strong style="font-size: 1.1rem; color: var(--primary); font-family: monospace;">CMP-2026-000102</strong>
                     </div>
-                    <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Assigned to Senior Lift Technician (Otis Maintenance)</p>
+                    <span style="background: var(--secondary-light); color: var(--secondary-hover); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">IN PROGRESS</span>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 2. ABOUT SECTION -->
-<section id="about" style="padding: 5rem 0; background: #FFFFFF;">
+<!-- 2. ABOUT & FEATURES SECTION -->
+<section style="padding: 5rem 0; background: var(--surface);" class="reveal">
     <div class="container">
         <div class="section-title">
-            <h2>About Skyline Residency</h2>
-            <p>A luxury gated residential community engineered for comfort, safety, and modern living.</p>
+            <h2>Built for Modern Residential Societies</h2>
+            <p>Streamlining apartment maintenance operations with complete transparency and real-time status visibility.</p>
         </div>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
-            <div>
-                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary);">Next-Gen Apartment Management</h3>
-                <p style="margin-bottom: 1.25rem; line-height: 1.7; color: var(--text-muted);">
-                    Skyline Residency is home to over 500 premium residential units across 6 towers. To ensure high standards of living, our Smart Maintenance Portal allows public ticket registration without account creation.
-                </p>
-                <p style="margin-bottom: 1.5rem; line-height: 1.7; color: var(--text-muted);">
-                    Whether it's plumbing, electrical, lift, or security concerns, residents can log requests online in seconds and track progress using their unique Complaint ID.
-                </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border-left: 4px solid var(--primary);">
-                        <strong style="color: var(--primary); font-size: 1.1rem; display: block;">500+ Units</strong>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Connected Homes</span>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border-left: 4px solid var(--secondary);">
-                        <strong style="color: var(--secondary); font-size: 1.1rem; display: block;">< 24 Hours</strong>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Avg. Turnaround</span>
-                    </div>
-                </div>
+
+        <div class="grid-4">
+            <div class="card text-center">
+                <div class="category-icon"><i class="fas fa-bolt"></i></div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Instant Dispatch</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Tickets are routed directly to society office management and specialized technicians.</p>
             </div>
-            
-            <div style="background: var(--primary-light); padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(30, 58, 138, 0.15);">
-                <h4 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary);"><i class="fas fa-check-double"></i> Why Choose Our Portal?</h4>
-                <ul style="display: flex; flex-direction: column; gap: 1rem; list-style: none; padding: 0;">
-                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
-                        <div><strong>Zero Account Friction:</strong> Submit complaints immediately without registration or login passwords.</div>
-                    </li>
-                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
-                        <div><strong>Real-Time Complaint Tracking:</strong> Search your unique Complaint ID anytime for technician status and resolution notes.</div>
-                    </li>
-                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
-                        <div><strong>Photographic Evidence:</strong> Attach photos directly to your maintenance requests.</div>
-                    </li>
-                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
-                        <div><strong>Transparent Oversight:</strong> Society Manager reviews and signs off every ticket.</div>
-                    </li>
-                </ul>
+            <div class="card text-center">
+                <div class="category-icon"><i class="fas fa-lock-open"></i></div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">No Login Required</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Residents file complaints seamlessly without needing account registrations.</p>
+            </div>
+            <div class="card text-center">
+                <div class="category-icon"><i class="fas fa-clock"></i></div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Real-time Audit Trail</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Timestamped timeline updates for every status change and technician note.</p>
+            </div>
+            <div class="card text-center">
+                <div class="category-icon"><i class="fas fa-bullhorn"></i></div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Society Notice Board</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Stay updated with official water supply alerts, electrical drives, and general body notices.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 3. MAINTENANCE CATEGORIES GRID -->
-<section style="padding: 5rem 0; background: var(--bg);">
+<!-- 3. 12 MAINTENANCE CATEGORIES -->
+<section style="padding: 5rem 0; background: var(--bg);" class="reveal">
     <div class="container">
         <div class="section-title">
-            <h2>12 Residential Support Categories</h2>
-            <p>Comprehensive coverage for every corner of your apartment and common facilities.</p>
+            <h2>12 Apartment Maintenance Categories</h2>
+            <p>Comprehensive coverage for every residential maintenance issue across all society towers.</p>
         </div>
-        
-        <div class="categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #0284C7; margin-bottom: 1rem;"><i class="fas fa-faucet-drip"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Water Leakage</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Ceiling seepage, pipe bursts, and drainage overflows.</p>
+
+        <div class="grid-4">
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-faucet-drip"></i></div>
+                <h4>Water Leakage</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Pipe seepage, ceiling leaks, tap damage.</p>
             </div>
-            
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #EAB308; margin-bottom: 1rem;"><i class="fas fa-bolt"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Electrical Issue</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">MCB tripping, socket damage, and voltage fluctuations.</p>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-plug-circle-bolt"></i></div>
+                <h4>Electrical Issue</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Short circuits, MCB trip, hallway lighting.</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-elevator"></i></div>
+                <h4>Lift Problem</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Elevator noise, floor alignment, door sensor.</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-car-side"></i></div>
+                <h4>Parking Issue</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Unauthorized parking, spot obstruction.</p>
             </div>
 
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #8B5CF6; margin-bottom: 1rem;"><i class="fas fa-elevator"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Lift Problem</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Elevator jerking, floor misalignments, or door sensor faults.</p>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-user-shield"></i></div>
+                <h4>Security Complaint</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Gate entry verification, visitor pass alerts.</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-broom"></i></div>
+                <h4>Housekeeping</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Corridor sweeping, lobby sanitization.</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-trash-can"></i></div>
+                <h4>Garbage Collection</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Doorstep pickup, bin segregation.</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-droplet"></i></div>
+                <h4>Water Supply</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Overhead tank timing, low water pressure.</p>
             </div>
 
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #EC4899; margin-bottom: 1rem;"><i class="fas fa-square-parking"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Parking Issue</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Unregistered vehicle blocking, reserved slot encroachments.</p>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-wrench"></i></div>
+                <h4>Plumbing</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Drainage blockage, flush valve replacement.</p>
             </div>
-
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #10B981; margin-bottom: 1rem;"><i class="fas fa-shield-cat"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Security Complaint</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Gate entry delays, boom barrier faults, guard desk issues.</p>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-seedling"></i></div>
+                <h4>Garden Maintenance</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Lawn trimming, clubhouse plant watering.</p>
             </div>
-
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #F59E0B; margin-bottom: 1rem;"><i class="fas fa-broom"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Housekeeping</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Corridor cleaning, stairwell sanitation, window glass dust.</p>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-lightbulb"></i></div>
+                <h4>Street Lighting</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Compound pole lights, basement lamps.</p>
             </div>
-
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #6366F1; margin-bottom: 1rem;"><i class="fas fa-trash-can"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Garbage Collection</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Doorstep collection delays, segregation bin overflow.</p>
-            </div>
-
-            <div class="category-card" style="background: white; padding: 1.75rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;">
-                <div style="font-size: 2rem; color: #14B8A6; margin-bottom: 1rem;"><i class="fas fa-droplet"></i></div>
-                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Water Supply</h4>
-                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Low pressure, municipal water supply timing alerts.</p>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-sliders"></i></div>
+                <h4>Other Request</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">General society maintenance inquiries.</p>
             </div>
         </div>
-        
-        <div style="text-align: center; margin-top: 2.5rem;">
-            <a href="/complaint.html" class="btn btn-primary" style="padding: 0.85rem 2rem;">
-                <i class="fas fa-paper-plane"></i> File a Maintenance Request Now
-            </a>
+    </div>
+</section>
+
+<!-- 4. HOW IT WORKS -->
+<section style="padding: 5rem 0; background: var(--surface);" class="reveal">
+    <div class="container">
+        <div class="section-title">
+            <h2>3 Simple Steps to Resolution</h2>
+            <p>How Skyline Residency manages maintenance tickets from filing to resolution.</p>
+        </div>
+
+        <div class="steps-wrapper">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">File Complaint</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Select category, flat number, and upload image evidence optional.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Get Ticket ID</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Instant Complaint ID (e.g. CMP-2026-000101) generated for 24/7 lookup.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Technician Dispatch</h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Society manager assigns staff and posts live progress updates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. COMMUNITY STATS BANNER -->
+<div class="container reveal">
+    <div class="stats-banner">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>98%</h3>
+                <p>Resolution Rate</p>
+            </div>
+            <div class="stat-item">
+                <h3>&lt; 24h</h3>
+                <p>Average Dispatch</p>
+            </div>
+            <div class="stat-item">
+                <h3>12</h3>
+                <p>Categories Handled</p>
+            </div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>Transparent Audit</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6. FREQUENTLY ASKED QUESTIONS -->
+<section style="padding: 4rem 0 5rem; background: var(--bg);" class="reveal">
+    <div class="container">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about Skyline Residency maintenance portal.</p>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item active">
+                <button class="faq-question">
+                    Do residents need an account to file a complaint?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    No! Residents can submit maintenance tickets freely without registering or logging in. Simply save your generated Complaint ID to track status anytime.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    How long does it take for a technician to be assigned?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    Society management reviews new complaints in real time. High-priority complaints (such as elevator malfunctions or main pipe seepage) are dispatched immediately.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    Can I attach photographs of the maintenance problem?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    Yes! You can attach image files (JPG, PNG, WEBP up to 5MB) while registering a complaint to help technicians assess the issue faster.
+                </div>
+            </div>
         </div>
     </div>
 </section>

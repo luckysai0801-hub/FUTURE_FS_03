@@ -4,86 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Society Manager Login – Skyline Residency</title>
-    <meta name="description" content="Society Manager Administration Login for Skyline Residency Smart Apartment Management Portal.">
+    <meta name="description" content="Admin and Society Manager portal login for Skyline Residency Complaint & Maintenance System.">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
 </head>
-<body>
+<body class="auth-body">
 
-<!-- Dynamic Navbar Container -->
-<div id="app-navbar"></div>
-
-<main class="main-content" style="padding: 4rem 0; background: var(--bg); min-height: calc(100vh - 200px); display: flex; align-items: center;">
-    <div class="container">
-        
-        <div style="max-width: 480px; margin: 0 auto;">
-            
-            <!-- Login Card -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 2.5rem;">
-                
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1rem auto;">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                    <h2 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 0.25rem;">Society Manager Login</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Administrative Portal Access</p>
-                </div>
-
-                <!-- Alert Box -->
-                <div id="loginAlert" style="display: none; margin-bottom: 1.25rem;"></div>
-
-                <form id="adminLoginForm">
-                    <div class="form-group" style="margin-bottom: 1.25rem;">
-                        <label for="email" class="form-label">Admin Email Address</label>
-                        <div style="position: relative;">
-                            <i class="fas fa-envelope" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-                            <input type="email" id="email" name="email" class="form-control" style="padding-left: 2.5rem;" placeholder="admin@skylineresidency.com" required autocomplete="email">
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label for="password" class="form-label">Password</label>
-                        <div style="position: relative;">
-                            <i class="fas fa-key" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-                            <input type="password" id="password" name="password" class="form-control" style="padding-left: 2.5rem;" placeholder="••••••••" required autocomplete="current-password">
-                        </div>
-                    </div>
-
-                    <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; font-weight: 600;">
-                        <i class="fas fa-right-to-bracket"></i> Sign In to Admin Panel
-                    </button>
-                </form>
-
-                <!-- Credentials Helper Info Card -->
-                <div style="margin-top: 2rem; padding: 1rem; background: var(--primary-light); border-radius: var(--radius-sm); border: 1px solid rgba(30,58,138,0.15); font-size: 0.85rem; color: var(--primary);">
-                    <strong><i class="fas fa-info-circle"></i> Default Credentials:</strong>
-                    <div style="margin-top: 0.35rem;">
-                        Email: <code>admin@skylineresidency.com</code><br>
-                        Password: <code>admin123</code>
-                    </div>
-                </div>
-
-            </div>
-
+<div class="auth-container reveal">
+    <!-- Left Showcase Panel -->
+    <div class="auth-left">
+        <div class="auth-brand">
+            <i class="fas fa-building-user"></i>
+            <span>Skyline Residency</span>
         </div>
 
+        <div>
+            <h2>Society Management Portal</h2>
+            <p>Access the administrative dashboard to dispatch tickets, manage complaints queue, post announcements, and view analytics.</p>
+            
+            <div class="auth-features">
+                <div class="auth-feature">
+                    <i class="fas fa-list-check"></i>
+                    <span>Real-time Maintenance Ticket Queue</span>
+                </div>
+                <div class="auth-feature">
+                    <i class="fas fa-user-gear"></i>
+                    <span>Technician Staff Assignment & Audit</span>
+                </div>
+                <div class="auth-feature">
+                    <i class="fas fa-file-csv"></i>
+                    <span>Instant CSV & PDF Report Exports</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="font-size: 0.8rem; color: #94A3B8;">
+            &copy; Skyline Residency Association. Authorized Personnel Only.
+        </div>
     </div>
-</main>
 
-<!-- Dynamic Footer Container -->
-<div id="app-footer"></div>
+    <!-- Right Login Form Panel -->
+    <div class="auth-right">
+        <div class="auth-header">
+            <h3>Admin Portal Sign In</h3>
+            <p>Enter your administrative credentials to continue.</p>
+        </div>
 
-<!-- Client Scripts -->
-<script src="/js/components.js"></script>
+        <div id="loginAlert" style="display: none;"></div>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label class="form-label" for="email">
+                    <i class="fas fa-envelope" style="color: var(--primary);"></i> Admin Email Address
+                </label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="admin@skylineresidency.com" required value="admin@skylineresidency.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <i class="fas fa-key" style="color: var(--primary);"></i> Security Password
+                </label>
+                <div class="password-input-wrap">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required value="admin123">
+                    <button type="button" id="togglePassword" class="password-toggle-btn" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.88rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-body); font-weight: 500;">
+                    <input type="checkbox" checked style="accent-color: var(--primary);"> Remember credentials
+                </label>
+                <a href="#" onclick="alert('Default login credentials:\nEmail: admin@skylineresidency.com\nPassword: admin123'); return false;" style="color: var(--primary); font-weight: 600;">
+                    Forgot Password?
+                </a>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem;">
+                <i class="fas fa-right-to-bracket"></i> Sign In to Admin Dashboard
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light); text-align: center;">
+            <a href="/index.html" style="color: var(--text-muted); font-size: 0.88rem; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Return to Resident Public Site
+            </a>
+        </div>
+    </div>
+</div>
+
 <script src="/js/auth.js"></script>
 </body>
 </html>

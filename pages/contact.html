@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact & Resident Support – Skyline Residency</title>
-    <meta name="description" content="Get in touch with Skyline Residency Society Management Office and emergency desk.">
+    <title>Resident Support & Contact – Skyline Residency</title>
+    <meta name="description" content="Contact Skyline Residency Society Association management office, emergency maintenance desk, and security portal.">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
@@ -21,60 +21,65 @@
 <!-- Dynamic Navbar Container -->
 <div id="app-navbar"></div>
 
-<main class="main-content" style="padding: 3rem 0; background: var(--bg);">
+<main class="main-content" style="padding: 3.5rem 0 5rem; background: var(--bg);">
     <div class="container">
         
-        <div class="page-header" style="text-align: center; margin-bottom: 2.5rem;">
-            <span class="badge badge-in-progress" style="font-size: 0.85rem; padding: 0.4rem 1rem; margin-bottom: 0.75rem; display: inline-block;">
-                <i class="fas fa-headset"></i> Resident Assistance & Support
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <span class="hero-badge">
+                <i class="fas fa-headset"></i> Resident Support Desk
             </span>
-            <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem;">Contact Management Office</h1>
-            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
-                Have questions or need emergency assistance? Reach out to the Skyline Residency Society Office desk below.
+            <h1 style="font-size: 2.4rem; color: var(--text-main); margin-bottom: 0.5rem;">Management Office Contact</h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
+                Get in touch with Skyline Residency Society Administration or contact 24x7 control desk officers.
             </p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto;">
-            
-            <div class="card" style="background: white; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-building-circle-check"></i></div>
-                <h3 style="color: var(--primary); margin-bottom: 0.75rem;">Society Management Office</h3>
-                <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-                    Clubhouse Level 1, Main Avenue,<br>Skyline Residency Gated Complex
-                </p>
-                <p style="color: var(--text-dark); font-size: 0.95rem;">
-                    <i class="fas fa-clock" style="color: var(--primary);"></i> Office Hours: 8:00 AM – 8:00 PM (Mon – Sat)
-                </p>
+        <div class="contact-grid" style="margin-bottom: 4rem;">
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <div class="card" style="display: flex; gap: 1.25rem; align-items: flex-start;">
+                    <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                        <i class="fas fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Management Office Address</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                            Clubhouse Level 1, Skyline Residency Association,<br>Main Palm Avenue, Sector 12.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; gap: 1.25rem; align-items: flex-start;">
+                    <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--secondary-light); color: var(--secondary-hover); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                        <i class="fas fa-phone-volume"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Emergency Control Desk</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                            +91 98765 43210 (24x7 Maintenance Hotline)<br>
+                            Intercom: Dial 1001 from flat receiver
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; gap: 1.25rem; align-items: flex-start;">
+                    <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: #FEF3C7; color: #D97706; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Official Email Desk</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                            helpdesk@skylineresidency.com<br>
+                            admin@skylineresidency.com
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="card" style="background: white; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                <div style="font-size: 2rem; color: var(--secondary); margin-bottom: 1rem;"><i class="fas fa-phone-volume"></i></div>
-                <h3 style="color: var(--primary); margin-bottom: 0.75rem;">24x7 Control Desk</h3>
-                <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-                    For urgent lift breakdowns, electrical hazards, or security emergencies.
-                </p>
-                <p style="color: var(--secondary); font-size: 1.2rem; font-weight: 700;">
-                    <i class="fas fa-phone"></i> +91 98765 43210
-                </p>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.49509494665!2d78.3846!3d17.4362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDI2JzEwLjMiTiA3OMKwMjMnMDQuNiJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
             </div>
-
-            <div class="card" style="background: white; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                <div style="font-size: 2rem; color: #0284C7; margin-bottom: 1rem;"><i class="fas fa-envelope-open-text"></i></div>
-                <h3 style="color: var(--primary); margin-bottom: 0.75rem;">Email Support</h3>
-                <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-                    Send general inquiries, maintenance billing queries, or society feedback.
-                </p>
-                <p style="color: #0284C7; font-weight: 600;">
-                    <i class="fas fa-envelope"></i> helpdesk@skylineresidency.com
-                </p>
-            </div>
-
-        </div>
-
-        <div style="text-align: center; margin-top: 3rem;">
-            <a href="/complaint.html" class="btn btn-primary" style="padding: 0.85rem 2rem;">
-                <i class="fas fa-paper-plane"></i> File a Maintenance Complaint
-            </a>
         </div>
 
     </div>
@@ -85,5 +90,6 @@
 
 <!-- Client Scripts -->
 <script src="/js/components.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>

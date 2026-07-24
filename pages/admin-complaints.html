@@ -3,24 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Apartment Complaints – Skyline Residency</title>
+    <title>Manage Complaints Queue – Skyline Residency</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/admin.css">
-    <link rel="stylesheet" href="/css/complaints.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body class="admin-body">
-
-<!-- Dynamic Navbar Container -->
-<div id="app-navbar"></div>
 
 <div class="admin-layout">
     
@@ -28,30 +24,28 @@
     <div id="app-admin-sidebar"></div>
 
     <!-- Main Content Area -->
-    <main class="admin-main">
+    <main class="main-content">
         
-        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <h1 style="font-size: 1.8rem; color: var(--primary);">Manage Apartment Complaints</h1>
-                <p style="color: var(--text-muted); margin: 0;">Review, filter, inspect, and update residential maintenance tickets.</p>
+        <div class="topbar">
+            <div class="topbar-left">
+                <h1>Maintenance Dispatch Queue</h1>
+                <p>Filter, search, update status, and manage all resident complaint tickets.</p>
             </div>
-            <a href="/api/admin/export/csv" class="btn btn-sm btn-outline-primary" target="_blank">
-                <i class="fas fa-file-csv"></i> Download CSV Report
+            <a href="/api/admin/export/csv" class="btn btn-primary btn-sm" target="_blank">
+                <i class="fas fa-file-csv"></i> Download CSV Export
             </a>
         </div>
 
-        <!-- Filter Bar Card -->
-        <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.25rem; margin-bottom: 1.5rem;">
-            <form id="complaintsFilterForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; align-items: flex-end;">
-                
-                <div>
-                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Search Keyword</label>
-                    <input type="text" id="filterSearch" class="form-control" placeholder="ID, Name, Title, Mobile...">
+        <!-- Search & Multi-Filter Bar -->
+        <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1.5; min-width: 240px; position: relative;">
+                    <input type="text" id="searchQuery" class="form-control" placeholder="Search by Ticket ID, Resident Name, Flat..." style="padding-left: 2.5rem;">
+                    <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
                 </div>
 
-                <div>
-                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Status</label>
-                    <select id="filterStatus" class="form-control">
+                <div style="flex: 1; min-width: 180px;">
+                    <select id="statusFilter" class="form-select">
                         <option value="">All Statuses</option>
                         <option value="Pending">Pending</option>
                         <option value="In Progress">In Progress</option>
@@ -60,9 +54,8 @@
                     </select>
                 </div>
 
-                <div>
-                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Category</label>
-                    <select id="filterCategory" class="form-control">
+                <div style="flex: 1; min-width: 180px;">
+                    <select id="categoryFilter" class="form-select">
                         <option value="">All Categories</option>
                         <option value="Water Leakage">Water Leakage</option>
                         <option value="Electrical Issue">Electrical Issue</option>
@@ -78,52 +71,26 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-
-                <div>
-                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Priority</label>
-                    <select id="filterPriority" class="form-control">
-                        <option value="">All Priorities</option>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                    </select>
-                </div>
-
-                <div style="display: flex; gap: 0.5rem;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">
-                        <i class="fas fa-filter"></i> Filter
-                    </button>
-                    <button type="button" id="resetFilterBtn" class="btn btn-outline-secondary">
-                        <i class="fas fa-rotate-left"></i>
-                    </button>
-                </div>
-
-            </form>
+            </div>
         </div>
 
-        <!-- Complaints Table Card -->
-        <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <span id="recordCountBadge" style="font-weight: 600; color: var(--primary);">Showing 0 Complaints</span>
-            </div>
-
+        <!-- Table Container -->
+        <div class="table-card">
             <div class="table-responsive">
-                <table class="table" style="width: 100%; border-collapse: collapse;">
+                <table class="data-table">
                     <thead>
-                        <tr style="background: var(--bg); text-align: left;">
-                            <th style="padding: 0.75rem;">Complaint ID</th>
-                            <th style="padding: 0.75rem;">Resident & Mobile</th>
-                            <th style="padding: 0.75rem;">Tower / Location</th>
-                            <th style="padding: 0.75rem;">Issue Title & Category</th>
-                            <th style="padding: 0.75rem;">Priority</th>
-                            <th style="padding: 0.75rem;">Status</th>
-                            <th style="padding: 0.75rem;">Action</th>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>Resident & Unit</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Date Filed</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="complaintsTableBody">
-                        <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading complaints data...</td>
-                        </tr>
+                        <tr><td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">Loading ticket queue...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -132,11 +99,46 @@
     </main>
 </div>
 
+<!-- Status Update Modal -->
+<div id="statusModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 style="font-size: 1.15rem; color: var(--primary);">
+                <i class="fas fa-pen-to-square"></i> Update Ticket Status & Remarks
+            </h3>
+            <button onclick="closeModal()" style="background: transparent; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="modalTicketId">
+            <div class="form-group">
+                <label class="form-label" for="modalStatus">Target Status</label>
+                <select id="modalStatus" class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="modalRemarks">Management Remarks / Technician Notes</label>
+                <textarea id="modalRemarks" class="form-control" rows="3" placeholder="e.g. Assigned Otis Lift Senior Technician. Work order #902 created."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeModal()" class="btn btn-outline-primary">Cancel</button>
+            <button onclick="submitStatusUpdate()" class="btn btn-primary">Save Changes</button>
+        </div>
+    </div>
+</div>
+
 <!-- Dynamic Footer Container -->
 <div id="app-footer"></div>
 
 <!-- Client Scripts -->
 <script src="/js/components.js"></script>
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
 </body>
 </html>

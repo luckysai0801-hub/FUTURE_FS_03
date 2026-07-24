@@ -1,53 +1,60 @@
 // =============================================
-// main.js - Shared UI Script
+// main.js - Shared UI Script & Micro-Animations
 // Skyline Residency – Smart Apartment Portal
 // =============================================
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Mobile Navbar Toggle
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-    if (navToggle && navLinks) {
-        navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-            const icon = navToggle.querySelector('i');
-            if (icon) {
-                if (navLinks.classList.contains('open')) {
-                    icon.classList.replace('fa-bars', 'fa-times');
-                } else {
-                    icon.classList.replace('fa-times', 'fa-bars');
-                }
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('open');
-                const icon = navToggle.querySelector('i');
-                if (icon) icon.classList.replace('fa-times', 'fa-bars');
+    // 1. Sticky Navbar shadow on scroll
+    const navbar = document.getElementById('mainNav');
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 30) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
         });
     }
 
-    // Sidebar Toggle
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('sidebar');
-    if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
+    // 2. Scroll Reveal Observer for modern fade-up animations
+    const revealElements = document.querySelectorAll('.reveal');
+    if (revealElements.length > 0) {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth < 992) {
-                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                    sidebar.classList.remove('open');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
-            }
-        });
+            });
+        }, observerOptions);
+
+        revealElements.forEach(el => revealObserver.observe(el));
     }
 
-    // Auto-dismiss Alerts
+    // 3. Interactive FAQ Accordion Handler
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.closest('.faq-item');
+            const isActive = item.classList.contains('active');
+
+            // Close all items
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+
+            // Toggle clicked item
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // 4. Auto-dismiss Alert Messages
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
@@ -58,15 +65,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     });
 
-    // Sticky Navbar shadow on scroll
-    const navbar = document.getElementById('mainNav');
-    if (navbar) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 40) {
-                navbar.style.boxShadow = '0 8px 30px rgba(15, 23, 42, 0.08)';
-            } else {
-                navbar.style.boxShadow = '';
+    // 5. Button Ripple Click Effect
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            const rect = button.getBoundingClientRect();
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${e.clientX - rect.left - radius}px`;
+            circle.style.top = `${e.clientY - rect.top - radius}px`;
+            circle.classList.add('ripple');
+
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) {
+                ripple.remove();
             }
+
+            button.appendChild(circle);
         });
-    }
+    });
 });

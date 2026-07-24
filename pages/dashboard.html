@@ -9,18 +9,14 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/admin.css">
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body class="admin-body">
-
-<!-- Dynamic Navbar Container -->
-<div id="app-navbar"></div>
 
 <div class="admin-layout">
     
@@ -28,162 +24,115 @@
     <div id="app-admin-sidebar"></div>
 
     <!-- Main Content Area -->
-    <main class="admin-main">
+    <main class="main-content">
         
-        <div class="dashboard-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <h1 style="font-size: 1.8rem; color: var(--primary);">Society Manager Dashboard</h1>
-                <p style="color: var(--text-muted); margin: 0;">Overview of residential maintenance, ticket status, and facility dispatch.</p>
+        <div class="topbar">
+            <div class="topbar-left">
+                <h1>Society Operations Dashboard</h1>
+                <p>Welcome back, Society Manager! Here is today's maintenance & complaint summary.</p>
             </div>
             <div style="display: flex; gap: 0.75rem;">
-                <a href="/admin-complaints.html" class="btn btn-sm btn-primary">
-                    <i class="fas fa-list-check"></i> Ticket Queue
+                <a href="/admin-complaints.html" class="btn btn-primary btn-sm">
+                    <i class="fas fa-list-check"></i> Manage Complaints Queue
                 </a>
-                <a href="/api/admin/export/csv" class="btn btn-sm btn-outline-primary" target="_blank">
-                    <i class="fas fa-file-csv"></i> Export CSV
+                <a href="/api/admin/export/csv" class="btn btn-outline-primary btn-sm" target="_blank">
+                    <i class="fas fa-file-csv"></i> Export CSV Report
                 </a>
             </div>
         </div>
 
-        <!-- Alert Container -->
-        <div id="dashAlert" style="display: none; margin-bottom: 1.5rem;"></div>
-
-        <!-- 8 STAT CARDS GRID -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
-            
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Total Tickets</small>
-                        <h2 id="statTotal" style="font-size: 1.8rem; color: var(--primary); margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: var(--primary-light);"><i class="fas fa-ticket-alt"></i></div>
+        <!-- Metric Stat Cards -->
+        <div class="stat-cards-grid">
+            <div class="stat-widget">
+                <div class="stat-widget-info">
+                    <h4>Total Tickets</h4>
+                    <div class="stat-number" id="statTotal">--</div>
+                </div>
+                <div class="stat-widget-icon stat-blue">
+                    <i class="fas fa-ticket"></i>
                 </div>
             </div>
 
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #F59E0B;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Pending</small>
-                        <h2 id="statPending" style="font-size: 1.8rem; color: #F59E0B; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #FEF3C7;"><i class="fas fa-clock"></i></div>
+            <div class="stat-widget">
+                <div class="stat-widget-info">
+                    <h4>Pending Queue</h4>
+                    <div class="stat-number" id="statPending">--</div>
+                </div>
+                <div class="stat-widget-icon stat-amber">
+                    <div class="fas fa-clock"></div>
                 </div>
             </div>
 
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #3B82F6;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">In Progress</small>
-                        <h2 id="statInProgress" style="font-size: 1.8rem; color: #3B82F6; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #DBEAFE;"><i class="fas fa-screwdriver-wrench"></i></div>
+            <div class="stat-widget">
+                <div class="stat-widget-info">
+                    <h4>In Progress</h4>
+                    <div class="stat-number" id="statInProgress">--</div>
+                </div>
+                <div class="stat-widget-icon stat-cyan">
+                    <i class="fas fa-spinner fa-spin"></i>
                 </div>
             </div>
 
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #10B981;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Resolved</small>
-                        <h2 id="statResolved" style="font-size: 1.8rem; color: #10B981; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #D1FAE5;"><i class="fas fa-circle-check"></i></div>
+            <div class="stat-widget">
+                <div class="stat-widget-info">
+                    <h4>Resolved</h4>
+                    <div class="stat-number" id="statResolved">--</div>
+                </div>
+                <div class="stat-widget-icon stat-green">
+                    <i class="fas fa-circle-check"></i>
                 </div>
             </div>
 
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #EF4444;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Rejected</small>
-                        <h2 id="statRejected" style="font-size: 1.8rem; color: #EF4444; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #FEE2E2;"><i class="fas fa-circle-xmark"></i></div>
+            <div class="stat-widget">
+                <div class="stat-widget-info">
+                    <h4>Active Residents</h4>
+                    <div class="stat-number" id="statUsers">--</div>
                 </div>
-            </div>
-
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #6366F1;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Active Orders</small>
-                        <h2 id="statActiveRequests" style="font-size: 1.8rem; color: #6366F1; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #E0E7FF;"><i class="fas fa-bars-staggered"></i></div>
+                <div class="stat-widget-icon stat-blue">
+                    <i class="fas fa-users"></i>
                 </div>
-            </div>
-
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #0284C7;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Active Residents</small>
-                        <h2 id="statTotalUsers" style="font-size: 1.8rem; color: #0284C7; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #E0F2FE;"><i class="fas fa-people-roof"></i></div>
-                </div>
-            </div>
-
-            <div class="card stat-card" style="background: white; padding: 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border-left: 4px solid #8B5CF6;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <small style="color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Notices</small>
-                        <h2 id="statAnnouncements" style="font-size: 1.8rem; color: #8B5CF6; margin-top: 0.25rem;">0</h2>
-                    </div>
-                    <div style="font-size: 2rem; color: #EDE9FE;"><i class="fas fa-bullhorn"></i></div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- RECENT COMPLAINTS TABLE -->
-        <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem; margin-bottom: 2rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                <h3 style="font-size: 1.25rem; color: var(--primary);">
-                    <i class="fas fa-clock-rotate-left"></i> Recent Maintenance Requests
-                </h3>
-                <a href="/admin-complaints.html" class="btn btn-sm btn-outline-primary">View All Complaints</a>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: var(--bg); text-align: left;">
-                            <th style="padding: 0.75rem;">Complaint ID</th>
-                            <th style="padding: 0.75rem;">Resident Name</th>
-                            <th style="padding: 0.75rem;">Category</th>
-                            <th style="padding: 0.75rem;">Location</th>
-                            <th style="padding: 0.75rem;">Priority</th>
-                            <th style="padding: 0.75rem;">Status</th>
-                            <th style="padding: 0.75rem;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentComplaintsBody">
-                        <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading complaints data...</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
-        <!-- BREAKDOWN GRID -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        <!-- Dashboard Main Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.75rem;">
             
+            <!-- Recent Complaints Card -->
+            <div class="table-card" style="margin-bottom: 0;">
+                <div class="table-header">
+                    <h3 style="font-size: 1.15rem; color: var(--primary);">
+                        <i class="fas fa-clock-rotate-left"></i> Recent Complaint Submissions
+                    </h3>
+                    <a href="/admin-complaints.html" class="btn btn-sm btn-outline-primary">
+                        View Full Queue
+                    </a>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Resident</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentComplaintsBody">
+                            <tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading recent complaints...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Category Breakdown Card -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem;">
-                <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem;">
-                    <i class="fas fa-chart-pie"></i> Complaints by Category
+            <div class="card">
+                <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1.25rem;">
+                    <i class="fas fa-chart-pie"></i> Category Distribution
                 </h3>
-                <div id="categoryBreakdown" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <p style="color: var(--text-muted);">Loading category stats...</p>
-                </div>
-            </div>
-
-            <!-- Department Breakdown Card -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem;">
-                <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem;">
-                    <i class="fas fa-building"></i> Complaints by Tower / Location
-                </h3>
-                <div id="departmentBreakdown" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <p style="color: var(--text-muted);">Loading department stats...</p>
+                <div id="categoryBreakdown">
+                    <p style="color: var(--text-muted);">Loading distribution metrics...</p>
                 </div>
             </div>
 
@@ -197,6 +146,7 @@
 
 <!-- Client Scripts -->
 <script src="/js/components.js"></script>
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
 </body>
 </html>

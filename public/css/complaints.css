@@ -1,29 +1,70 @@
 /* ================================================================
-   complaints.css — Form & Tracking Timeline Styling
+   complaints.css — Complaint Submission Form & Timeline Styling
    Skyline Residency – Smart Apartment Portal
    ================================================================ */
 
 .form-card {
-  background: #FFFFFF;
+  background: var(--surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  padding: 2.5rem;
 }
 
-.form-card .card-body {
-  padding: 2.25rem;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* PRIORITY SELECTOR */
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.form-control, .form-select, textarea.form-control {
+  width: 100%;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background: var(--surface);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  outline: none;
+}
+
+.form-control:focus, .form-select:focus, textarea.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* PRIORITY SELECTOR PILLS */
 .priority-options { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .priority-option { cursor: pointer; }
 .priority-option input[type="radio"] { display: none; }
 .priority-option span {
   display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.6rem 1.25rem; border-radius: 30px;
+  padding: 0.65rem 1.4rem; border-radius: 30px;
   font-size: 0.88rem; font-weight: 700;
-  border: 1px solid var(--border-light);
+  border: 1.5px solid var(--border-light);
   background: #F8FAFC; transition: var(--transition);
   cursor: pointer; color: var(--text-body);
 }
@@ -38,7 +79,7 @@
 .file-upload-area {
   border: 2px dashed var(--border-light);
   border-radius: var(--radius-md);
-  padding: 2.5rem 1.5rem; text-align: center;
+  padding: 2.25rem 1.5rem; text-align: center;
   cursor: pointer; transition: var(--transition);
   position: relative; background: #F8FAFC;
 }
@@ -66,7 +107,7 @@
 .image-preview {
   max-height: 200px; border-radius: var(--radius-md);
   margin-top: 1rem; border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-sm); display: block;
+  box-shadow: var(--shadow-sm); display: block; margin-left: auto; margin-right: auto;
 }
 
 /* TIMELINE TRACKING */
@@ -90,7 +131,7 @@
 }
 
 .timeline-content {
-  background: #F8FAFC; padding: 1rem 1.25rem; border-radius: var(--radius-sm);
+  background: #F8FAFC; padding: 1.25rem; border-radius: var(--radius-sm);
   border: 1px solid var(--border-light);
 }
 
@@ -99,5 +140,9 @@
 }
 
 .timeline-title {
-  font-size: 0.92rem; font-weight: 700; color: var(--text-main);
+  font-size: 0.95rem; font-weight: 700; color: var(--text-main);
+}
+
+@media (max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr; }
 }

@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Complaint Status – Skyline Residency</title>
-    <meta name="description" content="Search and track the status of your apartment maintenance request in real-time using your Complaint ID.">
+    <meta name="description" content="Track your maintenance complaint status in real-time with instant timeline updates at Skyline Residency.">
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
@@ -22,133 +22,103 @@
 <!-- Dynamic Navbar Container -->
 <div id="app-navbar"></div>
 
-<main class="main-content" style="padding: 3rem 0; background: var(--bg);">
+<main class="main-content" style="padding: 3.5rem 0 5rem; background: var(--bg);">
     <div class="container">
         
-        <!-- Header -->
-        <div class="page-header" style="text-align: center; margin-bottom: 2.5rem;">
-            <span class="badge badge-in-progress" style="font-size: 0.85rem; padding: 0.4rem 1rem; margin-bottom: 0.75rem; display: inline-block;">
-                <i class="fas fa-magnifying-glass"></i> Live Maintenance Dispatch Tracker
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <span class="hero-badge">
+                <i class="fas fa-magnifying-glass"></i> Live Status Search
             </span>
-            <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem;">Track Your Complaint Ticket</h1>
-            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
-                Enter your unique Complaint ID (e.g., CMP-2026-000101) below to view technician status, manager notes, and audit history.
+            <h1 style="font-size: 2.4rem; color: var(--text-main); margin-bottom: 0.5rem;">Track Complaint Ticket Status</h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
+                Enter your unique Complaint ID (e.g., CMP-2026-000101) to view status, technician assignment, and complete resolution log.
             </p>
         </div>
 
-        <!-- Search Bar Card -->
-        <div style="max-width: 680px; margin: 0 auto 2.5rem auto;">
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 1.5rem;">
-                <form id="trackSearchForm" style="display: flex; gap: 0.75rem;">
-                    <div style="position: relative; flex: 1;">
-                        <i class="fas fa-ticket-alt" style="position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-                        <input type="text" id="searchIdInput" class="form-control" style="padding-left: 2.75rem; text-transform: uppercase;" placeholder="Enter Complaint ID (e.g. CMP-2026-000101)" required>
+        <div style="max-width: 750px; margin: 0 auto;">
+            
+            <!-- Lookup Search Card -->
+            <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+                <form id="trackForm" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 260px; position: relative;">
+                        <input type="text" id="trackComplaintId" class="form-control" placeholder="Enter Complaint ID (e.g. CMP-2026-000101)" style="padding-left: 2.75rem; font-family: monospace; font-size: 1.05rem; font-weight: 700;" required>
+                        <i class="fas fa-ticket" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--primary);"></i>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem; white-space: nowrap;">
-                        <i class="fas fa-search"></i> Search Status
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.8rem;">
+                        <i class="fas fa-search"></i> Track Status
                     </button>
                 </form>
+
+                <div id="trackError" style="display: none; margin-top: 1rem; background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;"></div>
             </div>
-        </div>
 
-        <!-- Alert Container -->
-        <div id="trackAlert" style="max-width: 850px; margin: 0 auto 1.5rem auto; display: none;"></div>
-
-        <!-- Ticket Result Container (Hidden until search result is loaded) -->
-        <div id="ticketResult" style="max-width: 900px; margin: 0 auto; display: none;">
-            
-            <!-- Ticket Header Summary Card -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 2rem; margin-bottom: 2rem;">
+            <!-- Ticket Detail Container (Hidden by default) -->
+            <div id="trackResult" style="display: none;" class="reveal">
                 
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1.25rem;">
-                    <div>
-                        <span id="ticketIdBadge" style="font-size: 1.1rem; font-family: monospace; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 0.35rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid rgba(30,58,138,0.2);">
-                            CMP-2026-XXXXXX
-                        </span>
-                        <h2 id="ticketTitle" style="font-size: 1.5rem; margin-top: 0.75rem; margin-bottom: 0.25rem; color: var(--text-dark);">
-                            Complaint Title Placeholder
-                        </h2>
-                        <span id="ticketCategory" style="font-size: 0.9rem; color: var(--text-muted);">
-                            <i class="fas fa-layer-group"></i> Water Leakage
-                        </span>
+                <div class="card" style="margin-bottom: 1.5rem; padding: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block;">COMPLAINT ID</span>
+                            <h2 id="detailComplaintId" style="font-size: 1.6rem; color: var(--primary); font-family: monospace;">CMP-2026-000101</h2>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span id="detailPriorityBadge" style="font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; background: #FEF3C7; color: #D97706;">Medium Priority</span>
+                            <span id="detailStatusBadge" class="badge badge-pending">Pending</span>
+                        </div>
                     </div>
 
-                    <div style="text-align: right;">
-                        <span id="ticketStatusBadge" class="badge badge-pending" style="font-size: 1.1rem; padding: 0.5rem 1.25rem;">
-                            Pending
-                        </span>
-                        <span id="ticketPriorityBadge" class="badge" style="display: block; margin-top: 0.5rem; font-size: 0.85rem;">
-                            High Priority
-                        </span>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 id="detailTitle" style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-main);">Issue Title</h3>
+                        <p id="detailDescription" style="color: var(--text-body); font-size: 0.95rem; line-height: 1.7; background: #F8FAFC; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light);"></p>
                     </div>
-                </div>
 
-                <!-- Progress Step Bar -->
-                <div style="margin-bottom: 2rem; padding: 1.5rem; background: var(--bg); border-radius: var(--radius-md);">
-                    <h4 style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                        Ticket Lifecycle Timeline
-                    </h4>
-                    <div id="stepTimeline" style="display: flex; justify-content: space-between; position: relative;">
-                        <!-- Injected dynamically via JS -->
+                    <div class="form-grid" style="margin-bottom: 1.5rem;">
+                        <div>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block;">RESIDENT NAME</span>
+                            <strong id="detailResidentName" style="font-size: 0.95rem; color: var(--text-main);">--</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block;">FLAT / LOCATION</span>
+                            <strong id="detailFlatNumber" style="font-size: 0.95rem; color: var(--text-main);">--</strong> (<span id="detailBlock">--</span>)
+                        </div>
+                        <div>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block;">CATEGORY</span>
+                            <strong id="detailCategory" style="font-size: 0.95rem; color: var(--primary);">--</strong>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block;">SUBMITTED ON</span>
+                            <span id="detailDate" style="font-size: 0.95rem; color: var(--text-main); font-weight: 600;">--</span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Detail Grid -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
-                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm);">
-                        <small style="color: var(--text-muted); display: block;">Resident Name</small>
-                        <strong id="ticketResident" style="font-size: 1rem; color: var(--text-dark);">-</strong>
+                    <div style="background: var(--primary-light); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(37, 99, 235, 0.2); margin-bottom: 1.5rem;">
+                        <span style="font-size: 0.78rem; color: var(--primary); font-weight: 800; display: block; margin-bottom: 0.25rem;">ASSIGNED STAFF / TECHNICIAN</span>
+                        <strong id="detailAssignedTo" style="font-size: 1rem; color: var(--primary-dark);">Pending Staff Assignment</strong>
                     </div>
-                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm);">
-                        <small style="color: var(--text-muted); display: block;">Flat & Tower Location</small>
-                        <strong id="ticketLocation" style="font-size: 1rem; color: var(--text-dark);">-</strong>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm);">
-                        <small style="color: var(--text-muted); display: block;">Assigned Technician / Staff</small>
-                        <strong id="ticketAssigned" style="font-size: 1rem; color: var(--secondary);">-</strong>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm);">
-                        <small style="color: var(--text-muted); display: block;">Date Submitted</small>
-                        <strong id="ticketSubmittedDate" style="font-size: 1rem; color: var(--text-dark);">-</strong>
-                    </div>
-                </div>
 
-                <!-- Description & Remarks -->
-                <div style="margin-top: 1.5rem;">
-                    <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-align-left"></i> Resident Issue Description</h4>
-                    <div id="ticketDescription" style="padding: 1rem; background: #F8FAFC; border-radius: var(--radius-sm); border: 1px solid var(--border-light); font-size: 0.95rem; line-height: 1.6; color: var(--text-dark);">
-                        -
+                    <div style="background: #F8FAFC; padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 1.5rem;">
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 0.25rem;">MANAGEMENT REMARKS & NOTES</span>
+                        <p id="detailRemarks" style="font-size: 0.92rem; color: var(--text-body);">No management remarks posted yet.</p>
                     </div>
-                </div>
 
-                <div id="adminRemarksSection" style="margin-top: 1.5rem; display: none;">
-                    <h4 style="font-size: 1.05rem; color: var(--secondary); margin-bottom: 0.5rem;"><i class="fas fa-clipboard-check"></i> Society Manager Remarks</h4>
-                    <div id="ticketAdminRemarks" style="padding: 1rem; background: #ECFDF5; border-radius: var(--radius-sm); border: 1px solid #A7F3D0; font-size: 0.95rem; line-height: 1.6; color: #065F46;">
-                        -
-                    </div>
-                </div>
-
-                <!-- Attached Photo Evidence -->
-                <div id="imageSection" style="margin-top: 1.5rem; display: none;">
-                    <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-image"></i> Attached Photo Evidence</h4>
-                    <div>
+                    <div id="detailImageContainer" style="display: none; margin-top: 1.5rem; text-align: center;">
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 0.5rem;">ATTACHED PHOTO EVIDENCE</span>
                         <a id="imageLink" href="#" target="_blank">
-                            <img id="ticketImage" src="" alt="Maintenance photo evidence" style="max-width: 100%; max-height: 350px; border-radius: var(--radius-md); border: 1px solid var(--border-light); object-fit: contain;">
+                            <img id="detailImage" src="" alt="Attachment" style="max-height: 250px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin: 0 auto;">
                         </a>
                     </div>
                 </div>
 
-            </div>
-
-            <!-- Audit Trail Timeline Card -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 2rem;">
-                <h3 style="font-size: 1.25rem; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
-                    <i class="fas fa-history"></i> Audit Trail & Resolution Activity Log
-                </h3>
-
-                <div id="updatesTimeline">
-                    <!-- Dynamic updates injected here -->
+                <!-- Timeline Updates Header -->
+                <div class="card" style="padding: 2rem;">
+                    <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem;">
+                        <i class="fas fa-timeline"></i> Resolution Audit Timeline
+                    </h3>
+                    <div class="timeline" id="detailTimeline">
+                        <!-- Timeline Items Injected via JS -->
+                    </div>
                 </div>
+
             </div>
 
         </div>
@@ -161,6 +131,7 @@
 
 <!-- Client Scripts -->
 <script src="/js/components.js"></script>
+<script src="/js/main.js"></script>
 <script src="/js/complaints.js"></script>
 </body>
 </html>

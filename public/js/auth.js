@@ -1,68 +1,90 @@
 // =============================================
-// public/js/auth.js
-// Handles Admin Login Form Submission & Authentication via REST API
+// auth.js - Admin Authentication API & Toggle JS
 // Skyline Residency – Smart Apartment Portal
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    const adminLoginForm = document.getElementById('adminLoginForm');
-    if (!adminLoginForm) return;
+    
+    // 1. Password Visibility Toggle
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
 
-    adminLoginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const alertContainer = document.getElementById('loginAlert');
-        const submitBtn = document.getElementById('loginSubmitBtn');
-
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-
-        if (!email || !password) {
-            showAlert('Please enter both email and password.', 'error');
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
-
-        try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await res.json();
-
-            if (res.ok && data.success) {
-                showAlert(data.message || 'Login successful! Redirecting to dashboard...', 'success');
-                setTimeout(() => {
-                    window.location.href = '/dashboard.html';
-                }, 800);
-            } else {
-                showAlert(data.error || 'Invalid credentials.', 'error');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Sign In to Admin Panel';
+    if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            const icon = togglePasswordBtn.querySelector('i');
+            if (icon) {
+                icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
             }
-        } catch (error) {
-            console.error('Login error:', error);
-            showAlert('A network error occurred. Please try again.', 'error');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Sign In to Admin Panel';
-        }
-    });
+        });
+    }
+
+    // 2. Admin Login Form Handler
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const loginAlert = document.getElementById('loginAlert');
+
+    if (adminLoginForm) {
+        adminLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAlert();
+
+            const emailInput = document.getElementById('email');
+            const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Login';
+
+            const email = emailInput ? emailInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value : '';
+
+            if (!email || !password) {
+                showAlert('Please enter both admin email and password.');
+                return;
+            }
+
+            try {
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+                }
+
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    window.location.href = '/dashboard.html';
+                } else {
+                    showAlert(data.error || 'Invalid admin credentials. Please try again.');
+                }
+            } catch (err) {
+                console.error('Login Error:', err);
+                showAlert('Network error connecting to authentication server.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            }
+        });
+    }
+
+    function showAlert(msg) {
+        if (!loginAlert) return;
+        loginAlert.innerHTML = `
+            <div style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; padding: 0.85rem 1.1rem; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; margin-bottom: 1.25rem;">
+                <i class="fas fa-circle-exclamation"></i> ${msg}
+            </div>
+        `;
+        loginAlert.style.display = 'block';
+    }
+
+    function hideAlert() {
+        if (!loginAlert) return;
+        loginAlert.style.display = 'none';
+    }
 });
-
-function showAlert(message, type = 'error') {
-    const container = document.getElementById('loginAlert');
-    if (!container) return;
-
-    const isSuccess = type === 'success';
-    container.style.display = 'block';
-    container.innerHTML = `
-        <div style="background: ${isSuccess ? '#D1FAE5' : '#FEE2E2'}; color: ${isSuccess ? '#059669' : '#DC2626'}; border: 1px solid ${isSuccess ? '#A7F3D0' : '#FECACA'}; padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
-            <div><i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="margin-right: 8px;"></i> ${message}</div>
-            <button onclick="this.parentElement.parentElement.style.display='none'" style="background: none; border: none; cursor: pointer; color: inherit;"><i class="fas fa-times"></i></button>
-        </div>
-    `;
-}

@@ -9,17 +9,14 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body class="admin-body">
-
-<!-- Dynamic Navbar Container -->
-<div id="app-navbar"></div>
 
 <div class="admin-layout">
     
@@ -27,73 +24,82 @@
     <div id="app-admin-sidebar"></div>
 
     <!-- Main Content Area -->
-    <main class="admin-main">
+    <main class="main-content">
         
-        <div style="margin-bottom: 2rem;">
-            <h1 style="font-size: 1.8rem; color: var(--primary);">Broadcast Society Announcements</h1>
-            <p style="color: var(--text-muted); margin: 0;">Create and publish official notices to the public resident notice board.</p>
+        <div class="topbar">
+            <div class="topbar-left">
+                <h1>Society Notice Board Broadcasts</h1>
+                <p>Post announcements to the resident public portal and manage active broadcasts.</p>
+            </div>
         </div>
 
-        <!-- Alert Box -->
-        <div id="announcementAlert" style="display: none; margin-bottom: 1.5rem;"></div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.75rem;">
             
-            <!-- LEFT COLUMN: Create Announcement Form -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.75rem;">
-                <h3 style="font-size: 1.25rem; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
-                    <i class="fas fa-bullhorn"></i> New Announcement Broadcast
+            <!-- Create Form Card -->
+            <div class="card" style="height: fit-content;">
+                <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1.25rem;">
+                    <i class="fas fa-bullhorn"></i> Post New Broadcast
                 </h3>
 
                 <form id="createAnnouncementForm">
-                    
-                    <div class="form-group" style="margin-bottom: 1.25rem;">
-                        <label for="announcementTitle" class="form-label">Notice Title <span style="color:red;">*</span></label>
-                        <input type="text" id="announcementTitle" name="title" class="form-control" placeholder="e.g. Overhead Water Tank Sanitization" required>
+                    <div class="form-group">
+                        <label class="form-label" for="announcementTitle">Broadcast Title</label>
+                        <input type="text" id="announcementTitle" class="form-control" placeholder="e.g. Scheduled Water Tank Sanitization" required>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
-                        <div class="form-group">
-                            <label for="announcementCategory" class="form-label">Category</label>
-                            <select id="announcementCategory" name="category" class="form-control">
-                                <option value="General Notice">General Notice</option>
-                                <option value="Maintenance Alert">Maintenance Alert</option>
-                                <option value="Sanitation">Sanitation</option>
-                                <option value="Electrical">Electrical</option>
-                                <option value="Security Alert">Security Alert</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="announcementPriority" class="form-label">Urgency Priority</label>
-                            <select id="announcementPriority" name="priority" class="form-control">
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
-                                <option value="Low">Low</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="announcementCategory">Category</label>
+                        <select id="announcementCategory" class="form-select">
+                            <option value="Maintenance Alert">Maintenance Alert</option>
+                            <option value="General Notice" selected>General Notice</option>
+                            <option value="Sanitation">Sanitation</option>
+                            <option value="Security Alert">Security Alert</option>
+                            <option value="Meeting">Meeting</option>
+                        </select>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label for="announcementContent" class="form-label">Notice Message / Details <span style="color:red;">*</span></label>
-                        <textarea id="announcementContent" name="content" class="form-control" rows="5" placeholder="Write detailed notice information for residents..." required></textarea>
+                    <div class="form-group">
+                        <label class="form-label" for="announcementPriority">Priority</label>
+                        <select id="announcementPriority" class="form-select">
+                            <option value="Low">Low Priority</option>
+                            <option value="Medium" selected>Medium Priority</option>
+                            <option value="High">High Priority</option>
+                        </select>
                     </div>
 
-                    <button type="submit" id="createAnnouncementBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
-                        <i class="fas fa-paper-plane"></i> Publish Notice to Resident Board
+                    <div class="form-group">
+                        <label class="form-label" for="announcementContent">Notice Message Content</label>
+                        <textarea id="announcementContent" class="form-control" rows="4" placeholder="Enter notice details for residents..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Broadcast Notice Now
                     </button>
-
                 </form>
             </div>
 
-            <!-- RIGHT COLUMN: Published Notices List -->
-            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.75rem;">
-                <h3 style="font-size: 1.25rem; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
-                    <i class="fas fa-list"></i> Active Broadcast Notices
-                </h3>
-
-                <div id="adminAnnouncementsList" style="display: flex; flex-direction: column; gap: 1rem;">
-                    <p style="color: var(--text-muted);">Loading active announcements...</p>
+            <!-- Active Notices Table Card -->
+            <div class="table-card" style="margin-bottom: 0;">
+                <div class="table-header">
+                    <h3 style="font-size: 1.15rem; color: var(--primary);">
+                        <i class="fas fa-list"></i> Active Society Notices
+                    </h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Posted Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminAnnouncementsBody">
+                            <tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading active broadcasts...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -107,6 +113,7 @@
 
 <!-- Client Scripts -->
 <script src="/js/components.js"></script>
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
 </body>
 </html>
