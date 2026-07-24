@@ -6,6 +6,13 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
+// Auto-detect cloud providers like Aiven requiring SSL
+const isCloudHost = Boolean(
+    (process.env.DB_HOST && process.env.DB_HOST.includes('aivencloud.com')) ||
+    (process.env.MYSQL_URL && process.env.MYSQL_URL.includes('aivencloud.com')) ||
+    process.env.DB_SSL === 'true'
+);
+
 // Create a connection pool supporting environment configs and cloud DBs
 const poolConfig = (process.env.MYSQL_URL || process.env.DATABASE_URL) 
     ? (process.env.MYSQL_URL || process.env.DATABASE_URL)
@@ -13,12 +20,13 @@ const poolConfig = (process.env.MYSQL_URL || process.env.DATABASE_URL)
         host: process.env.DB_HOST || 'localhost',
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || '',
-        database: process.env.DB_NAME || 'complaint_management',
+        database: process.env.DB_NAME || 'defaultdb',
         port: parseInt(process.env.DB_PORT || '3306', 10),
         waitForConnections: true,
         connectionLimit: 10,
+        connectTimeout: 15000,
         queueLimit: 0,
-        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+        ssl: isCloudHost ? { rejectUnauthorized: false } : undefined
     };
 
 const pool = mysql.createPool(poolConfig);
