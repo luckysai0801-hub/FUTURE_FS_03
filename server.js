@@ -102,9 +102,8 @@ app.get(['/admin/reports', '/admin-reports', '/admin-reports.html'], (req, res) 
     res.sendFile(path.join(__dirname, 'pages/admin-reports.html'));
 });
 
-// Alias routes
-app.get('/complaints', (req, res) => res.redirect('/track'));
-app.get('/admin', (req, res) => res.redirect('/admin/dashboard'));
+// Direct alias routes
+app.get('/admin-login', (req, res) => res.redirect('/admin-login.html'));
 
 // 404 Handler
 app.use((req, res) => {

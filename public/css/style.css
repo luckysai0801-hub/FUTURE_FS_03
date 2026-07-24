@@ -539,12 +539,17 @@ ul { list-style:none; }
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(24px);
+  opacity: 1;
+  transform: translateY(0);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.reveal.visible {
+body.js-loaded .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+body.js-loaded .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }

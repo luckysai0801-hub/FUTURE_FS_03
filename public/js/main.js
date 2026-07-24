@@ -4,6 +4,7 @@
 // =============================================
 
 document.addEventListener('DOMContentLoaded', function () {
+    document.body.classList.add('js-loaded');
 
     // 1. Sticky Navbar shadow on scroll
     const navbar = document.getElementById('mainNav');
