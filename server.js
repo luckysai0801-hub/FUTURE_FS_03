@@ -26,9 +26,13 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Middleware
+// Serve static assets from public directory with multi-route fallback
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/admin', express.static(path.join(__dirname, 'public')));
+app.use('/complaints', express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'pages')));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -53,48 +57,48 @@ app.use('/api/admin', adminRoutes);
 app.get('/admin/export/csv', isAdmin, adminController.exportCSV);
 app.get('/api/admin/export/csv', isAdmin, adminController.exportCSV);
 
-// Static Page Routes
-app.get('/', (req, res) => {
+// Static Page Routes (Support both clean URLs and .html extensions)
+app.get(['/', '/index', '/index.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/index.html'));
 });
 
-app.get('/complaints/new', (req, res) => {
+app.get(['/complaint', '/complaint.html', '/complaints/new'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/complaint.html'));
 });
 
-app.get('/track', (req, res) => {
+app.get(['/track', '/track.html', '/complaints'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/track.html'));
 });
 
-app.get('/announcements', (req, res) => {
+app.get(['/announcements', '/announcements.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/announcements.html'));
 });
 
-app.get('/contact', (req, res) => {
+app.get(['/contact', '/contact.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/contact.html'));
 });
 
-app.get('/admin/login', (req, res) => {
+app.get(['/admin/login', '/admin-login', '/admin-login.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/admin-login.html'));
 });
 
-app.get('/admin/dashboard', (req, res) => {
+app.get(['/admin/dashboard', '/dashboard', '/dashboard.html', '/admin'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/dashboard.html'));
 });
 
-app.get('/admin/complaints', (req, res) => {
+app.get(['/admin/complaints', '/admin-complaints', '/admin-complaints.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/admin-complaints.html'));
 });
 
-app.get('/admin/announcements', (req, res) => {
+app.get(['/admin/announcements', '/admin-announcements', '/admin-announcements.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/admin-announcements.html'));
 });
 
-app.get('/admin/users', (req, res) => {
+app.get(['/admin/users', '/admin-users', '/admin-users.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/admin-users.html'));
 });
 
-app.get('/admin/reports', (req, res) => {
+app.get(['/admin/reports', '/admin-reports', '/admin-reports.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'pages/admin-reports.html'));
 });
 
