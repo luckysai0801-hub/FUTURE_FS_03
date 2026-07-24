@@ -3,74 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Resident Dashboard – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body class="dashboard-body">
+
 <%- include('../partials/sidebar', { activePage: 'dashboard' }) %>
+
 <div class="main-content" id="mainContent">
     <div class="topbar">
         <div class="topbar-left">
-            <div class="breadcrumb"><span>Dashboard</span></div>
-            <h1><i class="fas fa-home"></i> My Dashboard</h1>
-            <p>Welcome back, <strong><%= user.full_name %></strong> — here's an overview of your complaints</p>
+            <h1><i class="fas fa-building" style="color: var(--primary);"></i> Resident Dashboard</h1>
+            <p>Welcome back, <strong><%= user.full_name %></strong> — manage your apartment maintenance tickets</p>
         </div>
-        <a href="/complaints/new" class="btn btn-primary"><i class="fas fa-plus"></i> New Complaint</a>
+        <div class="topbar-right">
+            <a href="/complaints/new" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Register Complaint</a>
+        </div>
     </div>
 
-    <% if (typeof success !== 'undefined' && success) { %><div class="alert alert-success fade-in"><i class="fas fa-check-circle"></i> <%= success %><button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button></div><% } %>
-
-    <div class="stats-grid">
-        <div class="stat-card stat-total"><div class="stat-icon"><i class="fas fa-folder-open"></i></div><div class="stat-info"><h3><%= stats.total || 0 %></h3><p>Total</p></div></div>
-        <div class="stat-card stat-pending"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h3><%= stats.pending || 0 %></h3><p>Pending</p></div></div>
-        <div class="stat-card stat-progress"><div class="stat-icon"><i class="fas fa-spinner"></i></div><div class="stat-info"><h3><%= stats.in_progress || 0 %></h3><p>In Progress</p></div></div>
-        <div class="stat-card stat-resolved"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h3><%= stats.resolved || 0 %></h3><p>Resolved</p></div></div>
-        <div class="stat-card stat-rejected"><div class="stat-icon"><i class="fas fa-times-circle"></i></div><div class="stat-info"><h3><%= stats.rejected || 0 %></h3><p>Rejected</p></div></div>
+    <% if (typeof success !== 'undefined' && success) { %>
+    <div style="background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <i class="fas fa-check-circle" style="margin-right: 6px;"></i> <%= success %>
     </div>
+    <% } %>
 
-    <div class="card">
-        <div class="card-header">
-            <h3><i class="fas fa-list-alt"></i> Recent Complaints</h3>
-            <a href="/complaints" class="btn btn-sm btn-outline">View All <i class="fas fa-arrow-right"></i></a>
-        </div>
-        <div class="card-body" style="padding:0">
-            <% if (!recentComplaints || recentComplaints.length === 0) { %>
-            <div class="empty-state"><i class="fas fa-inbox"></i><h4>No complaints yet</h4><p><a href="/complaints/new">Submit your first complaint</a></p></div>
-            <% } else { %>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Priority</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
-                    <tbody>
-                        <% recentComplaints.forEach(c => { %>
-                        <tr>
-                            <td><span class="complaint-id"><%= c.complaint_id %></span></td>
-                            <td class="complaint-title"><%= c.title %></td>
-                            <td><span class="category-badge"><%= c.category %></span></td>
-                            <td><span class="priority-badge priority-<%= c.priority.toLowerCase() %>"><%= c.priority %></span></td>
-                            <td><span class="status-badge status-<%= c.status.toLowerCase().replace(' ','-') %>"><%= c.status %></span></td>
-                            <td style="color:var(--text-muted);font-size:0.78rem"><%= new Date(c.created_at).toLocaleDateString('en-IN') %></td>
-                            <td><a href="/complaints/<%= c.id %>" class="btn btn-xs btn-view"><i class="fas fa-eye"></i></a></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+    <!-- Resident Stats Counter Grid -->
+    <div class="stats-grid-7">
+        <div class="stat-card stat-total">
+            <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.total || 0 %></h3>
+                <p>Total Complaints</p>
             </div>
-            <% } %>
+        </div>
+        
+        <div class="stat-card stat-pending">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.pending || 0 %></h3>
+                <p>Pending</p>
+            </div>
+        </div>
+
+        <div class="stat-card stat-progress">
+            <div class="stat-icon"><i class="fas fa-tools"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.in_progress || 0 %></h3>
+                <p>In Progress</p>
+            </div>
+        </div>
+
+        <div class="stat-card stat-resolved">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.resolved || 0 %></h3>
+                <p>Resolved</p>
+            </div>
+        </div>
+
+        <div class="stat-card stat-rejected">
+            <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.rejected || 0 %></h3>
+                <p>Rejected</p>
+            </div>
         </div>
     </div>
 
-    <div class="quick-actions">
-        <h3>Quick Actions</h3>
-        <div class="quick-actions-grid">
-            <a href="/complaints/new" class="quick-action-card"><i class="fas fa-plus-circle"></i><span>New Complaint</span></a>
-            <a href="/complaints" class="quick-action-card"><i class="fas fa-folder-open"></i><span>My Complaints</span></a>
-            <a href="/profile" class="quick-action-card"><i class="fas fa-user-circle"></i><span>My Profile</span></a>
+    <!-- Recent Complaints Card -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3><i class="fas fa-history" style="color: var(--primary); margin-right: 8px;"></i> Recent Maintenance Requests</h3>
+            <a href="/complaints" class="btn btn-light" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">View All Requests <i class="fas fa-arrow-right" style="margin-left: 4px;"></i></a>
         </div>
+        
+        <% if (!recentComplaints || recentComplaints.length === 0) { %>
+        <div style="padding: 3rem; text-align: center; color: var(--text-muted);">
+            <i class="fas fa-folder-open" style="font-size: 3rem; margin-bottom: 1rem; color: var(--border-light);"></i>
+            <h4>No maintenance requests logged yet</h4>
+            <p style="font-size: 0.9rem; margin-top: 0.25rem;"><a href="/complaints/new" style="color: var(--primary); font-weight: 700;">Submit your first maintenance complaint</a></p>
+        </div>
+        <% } else { %>
+        <div style="overflow-x: auto;">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Complaint Title</th>
+                        <th>Category</th>
+                        <th>Location / Flat</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Date Submitted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% recentComplaints.forEach(c => { %>
+                    <tr>
+                        <td><strong style="color: var(--primary);"><%= c.complaint_id %></strong></td>
+                        <td><strong><%= c.title %></strong></td>
+                        <td><span style="font-size: 0.85rem; font-weight: 600; color: var(--text-body);"><%= c.category %></span></td>
+                        <td><%= c.department %></td>
+                        <td>
+                            <span class="badge badge-priority-<%= c.priority.toLowerCase() %>"><%= c.priority %></span>
+                        </td>
+                        <td>
+                            <span class="badge badge-<%= c.status.toLowerCase().replace(' ', '-') %>"><%= c.status %></span>
+                        </td>
+                        <td><%= new Date(c.created_at).toLocaleDateString('en-IN') %></td>
+                        <td>
+                            <a href="/complaints/<%= c.id %>" class="btn btn-light" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;">
+                                <i class="fas fa-eye"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
     </div>
 </div>
+
 <script src="/js/main.js"></script>
 </body>
 </html>

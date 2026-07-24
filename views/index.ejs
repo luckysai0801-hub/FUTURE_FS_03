@@ -3,239 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vignan VITS — Complaint Management System</title>
-    <meta name="description" content="A streamlined complaint management portal for Vignan Institute of Technology and Science students.">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Skyline Residency – Smart Apartment Complaint & Maintenance Portal</title>
+    <meta name="description" content="Commercial-grade smart apartment maintenance and complaint management portal for Skyline Residency community. Register, track, and manage residential requests 24/7 without login.">
+    <meta name="keywords" content="Skyline Residency, Apartment Maintenance, Complaint Management, Society Portal, Residential Maintenance">
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="Skyline Residency – Smart Apartment Complaint & Maintenance Portal">
+    <meta property="og:description" content="Submit maintenance requests, track progress in real-time with Complaint ID, and enjoy hassle-free residential community living.">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <%- include('partials/navbar') %>
 
-<!-- Flash Messages -->
-<% if (success) { %>
-<div class="alert alert-success" id="flashMsg">
-    <i class="fas fa-check-circle"></i> <%= success %>
-    <button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
-</div>
-<% } %>
-<% if (error) { %>
-<div class="alert alert-error" id="flashMsg">
-    <i class="fas fa-exclamation-circle"></i> <%= error %>
-    <button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+<!-- Flash Notifications -->
+<% if (typeof success !== 'undefined' && success) { %>
+<div class="container" style="margin-top: 1rem;">
+    <div style="background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; padding: 1rem 1.5rem; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+        <div><i class="fas fa-check-circle" style="margin-right: 8px;"></i> <%= success %></div>
+        <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; color: #059669;"><i class="fas fa-times"></i></button>
+    </div>
 </div>
 <% } %>
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-content">
-        <div class="hero-badge">
-            <i class="fas fa-graduation-cap"></i> Vignan Institute of Technology and Science
-        </div>
-        <h1 class="hero-title">
-            Complaint Management <span class="text-gradient">System</span>
-        </h1>
-        <p class="hero-subtitle">
-            A streamlined platform for students to raise complaints and track their resolution. 
-            Fast, transparent, and efficient.
-        </p>
-        <div class="hero-buttons">
-            <a href="/register" class="btn btn-primary btn-lg">
-                <i class="fas fa-user-plus"></i> Register Now
-            </a>
-            <a href="/login" class="btn btn-outline btn-lg">
-                <i class="fas fa-sign-in-alt"></i> Student Login
-            </a>
-        </div>
-        <div class="hero-stats">
-            <div class="hero-stat">
-                <strong>Fast</strong>
-                <span>Resolution</span>
-            </div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat">
-                <strong>Live</strong>
-                <span>Tracking</span>
-            </div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat">
-                <strong>Secure</strong>
-                <span>System</span>
-            </div>
-        </div>
+<% if (typeof error !== 'undefined' && error) { %>
+<div class="container" style="margin-top: 1rem;">
+    <div style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 1rem 1.5rem; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+        <div><i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i> <%= error %></div>
+        <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; color: #DC2626;"><i class="fas fa-times"></i></button>
     </div>
-    <div class="hero-image">
-        <div class="hero-card">
-            <div class="hero-card-header">
-                <span class="status-badge status-pending">Pending</span>
-                <span class="complaint-id">CMP001</span>
+</div>
+<% } %>
+
+<!-- 1. HERO SECTION -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-shield-alt"></i> Public Resident Maintenance Gateway (No Login Required)
+                </div>
+                <h1>
+                    Smart Complaint Management for <span>Modern Apartment</span> Communities
+                </h1>
+                <p class="hero-subtitle">
+                    Submit maintenance requests, track progress in real-time, and enjoy hassle-free community living with instant Complaint ID dispatch.
+                </p>
+                <div class="hero-buttons">
+                    <a href="/complaints/new" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+                        <i class="fas fa-plus-circle"></i> Register Complaint
+                    </a>
+                    <a href="/track" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+                        <i class="fas fa-search-location"></i> Track Complaint
+                    </a>
+                </div>
             </div>
-            <h4>Classroom Projector Issue</h4>
-            <p>Lab Block - IT Department</p>
-            <div class="hero-card-footer">
-                <span><i class="fas fa-clock"></i> 2 hours ago</span>
-                <span class="priority-badge priority-high">High</span>
-            </div>
-        </div>
-        <div class="hero-card hero-card-2">
-            <div class="hero-card-header">
-                <span class="status-badge status-resolved">Resolved</span>
-                <span class="complaint-id">CMP002</span>
-            </div>
-            <h4>Water Cooler Not Working</h4>
-            <p>Block A - Facilities</p>
-            <div class="hero-card-footer">
-                <span><i class="fas fa-check"></i> Resolved</span>
-                <span class="priority-badge priority-medium">Medium</span>
+            
+            <div class="hero-card">
+                <div class="hero-card-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 0.75rem;">Instant Ticket Tracking</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                    Submit your issue freely and receive an automated Complaint ID (e.g. CMP-2026-000145) for 24/7 status tracking.
+                </p>
+                <div style="background: var(--bg); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <strong style="font-size: 0.88rem; color: var(--primary);"><i class="fas fa-ticket-alt"></i> CMP-2026-000102 – Elevator Fix</strong>
+                        <span class="badge badge-in-progress">In Progress</span>
+                    </div>
+                    <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Assigned to Senior Lift Technician (Otis Maintenance)</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="features" id="features">
+<!-- 2. ABOUT SECTION -->
+<section id="about" style="padding: 5rem 0; background: #FFFFFF;">
     <div class="container">
-        <div class="section-header">
-            <h2>Why Use Our System?</h2>
-            <p>Everything you need to manage and track complaints efficiently</p>
+        <div class="section-title">
+            <h2>About Skyline Residency</h2>
+            <p>A luxury gated residential community engineered for comfort, safety, and modern living.</p>
         </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #10B981, #059669)">
-                    <i class="fas fa-shield-alt"></i>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+            <div>
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary);">Next-Gen Apartment Management</h3>
+                <p style="margin-bottom: 1.25rem; line-height: 1.7;">
+                    Skyline Residency is home to over 500 premium residential units across 6 towers. To ensure high standards of living, our Smart Maintenance Portal allows public ticket registration without account creation.
+                </p>
+                <p style="margin-bottom: 1.5rem; line-height: 1.7;">
+                    Whether it's plumbing, electrical, lift, or security concerns, residents can log requests online in seconds and track progress using their unique Complaint ID.
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border-left: 4px solid var(--primary);">
+                        <strong style="color: var(--primary); font-size: 1.1rem; display: block;">500+ Units</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Connected Homes</span>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border-left: 4px solid var(--secondary);">
+                        <strong style="color: var(--secondary); font-size: 1.1rem; display: block;">< 24 Hours</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Avg. Turnaround</span>
+                    </div>
                 </div>
-                <h3>Secure & Private</h3>
-                <p>Your complaints are protected with bcrypt password hashing and secure sessions.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #34D399, #10B981)">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3>Track in Real-Time</h3>
-                <p>Follow your complaint status from Pending to Resolved with full update history.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #059669, #047857)">
-                    <i class="fas fa-users-cog"></i>
-                </div>
-                <h3>Admin Management</h3>
-                <p>Admins can assign complaints, update status, and respond with remarks.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #6EE7B7, #10B981)">
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                <h3>Detailed Reports</h3>
-                <p>Visual reports by category, department, and priority for campus analysis.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #047857, #064E3B)">
-                    <i class="fas fa-image"></i>
-                </div>
-                <h3>Image Evidence</h3>
-                <p>Attach photos to your complaint for better understanding and faster resolution.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #A7F3D0, #34D399)">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <h3>Mobile Friendly</h3>
-                <p>Access from any device – phone, tablet, or desktop with responsive design.</p>
+            
+            <div style="background: var(--primary-light); padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid rgba(30, 58, 138, 0.15);">
+                <h4 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary);"><i class="fas fa-check-double"></i> Why Choose Our Portal?</h4>
+                <ul style="display: flex; flex-direction: column; gap: 1rem;">
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
+                        <div><strong>Zero Account Friction:</strong> Submit complaints immediately without registration or login passwords.</div>
+                    </li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
+                        <div><strong>Real-Time Complaint Tracking:</strong> Search your unique Complaint ID anytime for technician status and resolution notes.</div>
+                    </li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
+                        <div><strong>Photographic Evidence:</strong> Attach photos directly to your maintenance requests.</div>
+                    </li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <i class="fas fa-check-circle" style="color: var(--secondary); font-size: 1.2rem; margin-top: 2px;"></i>
+                        <div><strong>Transparent Oversight:</strong> Society Manager reviews and signs off every ticket.</div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
 
-<!-- How It Works -->
-<section class="how-it-works">
+<!-- 3. SERVICES SECTION -->
+<section id="services" style="padding: 5rem 0; background: var(--bg);">
     <div class="container">
-        <div class="section-header">
+        <div class="section-title">
+            <h2>Our Core Services</h2>
+            <p>Designed for seamless interaction between residents, society managers, and facility technicians.</p>
+        </div>
+        
+        <div class="grid-3">
+            <div class="card">
+                <div class="category-icon" style="margin-left: 0;"><i class="fas fa-file-signature"></i></div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Complaint Registration</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Categorized issue submission with Full Name, Flat Number, Mobile, Block/Wing, Priority, Description, and photo uploads.</p>
+            </div>
+            
+            <div class="card">
+                <div class="category-icon" style="margin-left: 0;"><i class="fas fa-route"></i></div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Complaint Tracking</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Search by Complaint ID (e.g. CMP-2026-000145) anytime to inspect assigned staff, status timeline, and resolution remarks.</p>
+            </div>
+            
+            <div class="card">
+                <div class="category-icon" style="margin-left: 0;"><i class="fas fa-user-cog"></i></div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Maintenance Updates</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Automated status changes (Pending, In Progress, Resolved, Rejected) logged transparently in an audit trail.</p>
+            </div>
+            
+            <div class="card">
+                <div class="category-icon" style="margin-left: 0;"><i class="fas fa-phone-alt"></i></div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Emergency Contacts</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Instant access to 24/7 plumbers, electricians, lift technicians, and main security gate control desk numbers.</p>
+            </div>
+            
+            <div class="card">
+                <div class="category-icon" style="margin-left: 0;"><i class="fas fa-bell"></i></div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Live Ticket Lookup</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Anyone can check complaint progress using their Complaint ID without logging in.</p>
+            </div>
+            
+            <div class="card">
+                <div class="category-icon" style="margin-left: 0;"><i class="fas fa-bullhorn"></i></div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Announcements</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Stay informed about scheduled power maintenance, water tank cleaning, pest control, and society general body meetings.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. COMPLAINT CATEGORIES -->
+<section style="padding: 5rem 0; background: #FFFFFF;">
+    <div class="container">
+        <div class="section-title">
+            <h2>Maintenance Categories</h2>
+            <p>Select from 12 specialized categories to ensure your request reaches the right technician immediately.</p>
+        </div>
+        
+        <div class="grid-4">
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-tint"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Water Leakage</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Ceilings & Pipes</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-bolt"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Electrical Issue</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Wiring & Breakers</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-elevator"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Lift Problem</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Elevator Service</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-car"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Parking Issue</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Slots & Parking</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-shield-alt"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Security Complaint</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Gates & Patrol</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-broom"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Housekeeping</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Corridors & Lobby</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-trash-alt"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Garbage Collection</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Doorstep Trash</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-water"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Water Supply</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Tank & Pressure</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-faucet"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Plumbing</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Faucets & Drains</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-seedling"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Garden Maintenance</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Parks & Lawns</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-lightbulb"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Street Lighting</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Pathway Lights</span>
+            </div>
+            <div class="category-card">
+                <div class="category-icon"><i class="fas fa-ellipsis-h"></i></div>
+                <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Other</h4>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">General Requests</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. HOW IT WORKS -->
+<section style="padding: 5rem 0; background: var(--bg);">
+    <div class="container">
+        <div class="section-title">
             <h2>How It Works</h2>
-            <p>Simple 4-step process to get your issues resolved</p>
+            <p>5 simple steps from logging your issue to complete verification.</p>
         </div>
-        <div class="steps-grid">
+        
+        <div class="steps-wrapper">
             <div class="step-card">
                 <div class="step-number">1</div>
-                <h3>Register</h3>
-                <p>Create your student account with your college email and secure password.</p>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Register Complaint</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Resident fills out ticket online and receives a unique Complaint ID.</p>
             </div>
-            <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+            
             <div class="step-card">
                 <div class="step-number">2</div>
-                <h3>Submit</h3>
-                <p>Fill in complaint details – category, department, priority, and description.</p>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Admin Notification</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Society Manager receives ticket alert on control dashboard.</p>
             </div>
-            <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+            
             <div class="step-card">
                 <div class="step-number">3</div>
-                <h3>Track</h3>
-                <p>Monitor status updates and admin remarks in real-time on your dashboard.</p>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Team Assignment</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Maintenance staff or external vendor dispatched.</p>
             </div>
-            <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+            
             <div class="step-card">
                 <div class="step-number">4</div>
-                <h3>Resolved!</h3>
-                <p>Receive confirmation once your complaint is reviewed and resolved by admin.</p>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Issue Resolution</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Technician completes work and logs resolution notes.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 0.5rem;">Track Progress</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Resident tracks status live using Complaint ID.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Status Info Section -->
-<section class="status-info">
+<!-- 6. RESIDENT TESTIMONIALS -->
+<section style="padding: 5rem 0; background: #FFFFFF;">
     <div class="container">
-        <div class="section-header">
-            <h2>Complaint Status Flow</h2>
-            <p>Track every stage of your complaint lifecycle</p>
+        <div class="section-title">
+            <h2>Resident Testimonials</h2>
+            <p>See what our residents say about living at Skyline Residency.</p>
         </div>
-        <div class="status-cards">
-            <div class="status-info-card" style="border-top: 4px solid #f59e0b">
-                <i class="fas fa-clock" style="color: #f59e0b"></i>
-                <h4>Pending</h4>
-                <p>Your complaint is submitted and waiting for admin review.</p>
+        
+        <div class="grid-3">
+            <div class="testimonial-card">
+                <div style="color: var(--accent-gold); margin-bottom: 1rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--text-body);">"I logged a pipe leakage issue on the website without needing to log in. Got my Complaint ID immediately and the plumber arrived by morning!"</p>
+                <div class="user-meta">
+                    <div class="user-avatar">RS</div>
+                    <div>
+                        <strong style="font-size: 0.95rem; display: block;">Rahul Sharma</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Tower A - Flat 402</span>
+                    </div>
+                </div>
             </div>
-            <div class="status-info-card" style="border-top: 4px solid #3b82f6">
-                <i class="fas fa-spinner" style="color: #3b82f6"></i>
-                <h4>In Progress</h4>
-                <p>Admin has reviewed and is actively working on your complaint.</p>
+            
+            <div class="testimonial-card">
+                <div style="color: var(--accent-gold); margin-bottom: 1rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--text-body);">"The lift jerk issue in Tower B was resolved quickly. Being able to track status using just my Complaint ID is super convenient."</p>
+                <div class="user-meta">
+                    <div class="user-avatar" style="background: #FEF3C7; color: #D97706;">PS</div>
+                    <div>
+                        <strong style="font-size: 0.95rem; display: block;">Priya Singh</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Tower B - Flat 105</span>
+                    </div>
+                </div>
             </div>
-            <div class="status-info-card" style="border-top: 4px solid #10b981">
-                <i class="fas fa-check-circle" style="color: #10b981"></i>
-                <h4>Resolved</h4>
-                <p>Your complaint has been successfully addressed and closed.</p>
-            </div>
-            <div class="status-info-card" style="border-top: 4px solid #ef4444">
-                <i class="fas fa-times-circle" style="color: #ef4444"></i>
-                <h4>Rejected</h4>
-                <p>Complaint was reviewed and not actionable. Admin will provide remarks.</p>
+            
+            <div class="testimonial-card">
+                <div style="color: var(--accent-gold); margin-bottom: 1rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--text-body);">"No password hassles or account setups required. Just enter flat details, submit complaint, and track status anytime!"</p>
+                <div class="user-meta">
+                    <div class="user-avatar" style="background: #EDE9FE; color: #7C3AED;">AK</div>
+                    <div>
+                        <strong style="font-size: 0.95rem; display: block;">Arun Kumar</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Tower C - Flat 704</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="cta-section">
-    <div class="cta-content">
-        <h2>Ready to Submit a Complaint?</h2>
-        <p>Join the Vignan VITS CMS platform and get your issues resolved faster than ever.</p>
-        <div class="cta-buttons">
-            <a href="/register" class="btn btn-primary btn-lg">
-                <i class="fas fa-user-plus"></i> Get Started Free
-            </a>
-            <a href="/login" class="btn btn-outline btn-lg">
-                <i class="fas fa-sign-in-alt"></i> Already Registered?
-            </a>
+<!-- 7. STATISTICS COUNTER -->
+<div class="container">
+    <div class="stats-banner">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>99.4%</h3>
+                <p>Complaints Resolved</p>
+            </div>
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Connected Units</p>
+            </div>
+            <div class="stat-item">
+                <h3>35</h3>
+                <p>Dedicated Staff</p>
+            </div>
+            <div class="stat-item">
+                <h3>< 4 Hrs</h3>
+                <p>Avg. Response Time</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 8. CONTACT & MAP SECTION -->
+<section id="contact" style="padding: 4rem 0 6rem; background: var(--bg);">
+    <div class="container">
+        <div class="section-title">
+            <h2>Contact Society Office</h2>
+            <p>Get in touch with Skyline Residency Facility Management Committee.</p>
+        </div>
+        
+        <div class="contact-grid">
+            <div class="card" style="padding: 2.5rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1.25rem; color: var(--primary);"><i class="fas fa-building" style="margin-right: 8px;"></i> Office Details</h3>
+                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <i class="fas fa-map-marker-alt" style="color: var(--secondary); font-size: 1.2rem; margin-top: 4px;"></i>
+                        <div>
+                            <strong>Residency Location</strong>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Tower A Ground Floor, Skyline Residency Boulevard Road, Hi-Tech Sector 4</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <i class="fas fa-clock" style="color: var(--secondary); font-size: 1.2rem; margin-top: 4px;"></i>
+                        <div>
+                            <strong>Society Office Hours</strong>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Monday – Saturday: 9:00 AM – 6:00 PM (Emergency Desk 24/7)</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <i class="fas fa-phone-alt" style="color: var(--secondary); font-size: 1.2rem; margin-top: 4px;"></i>
+                        <div>
+                            <strong>Helpline Phone</strong>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">+91 98765 43210 / +91 98765 43211</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <i class="fas fa-envelope" style="color: var(--secondary); font-size: 1.2rem; margin-top: 4px;"></i>
+                        <div>
+                            <strong>Email Address</strong>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">support@skylineresidency.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <iframe title="Skyline Residency Location" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.302324701254!2d78.38084!3d17.44479!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9158f201b205%3A0x11be71810c93540a!2sHITEC%20City%2C%20Hyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" loading="lazy"></iframe>
+            </div>
         </div>
     </div>
 </section>
 
 <%- include('partials/footer') %>
+
 <script src="/js/main.js"></script>
-<script>
-document.getElementById('navToggle').onclick = function(){
-    document.getElementById('navLinks').classList.toggle('open');
-};
-</script>
 </body>
 </html>

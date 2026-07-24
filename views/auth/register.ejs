@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register — Vignan CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Resident Registration – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
@@ -12,65 +12,69 @@
 <body class="auth-body">
 <div class="auth-container">
     <div class="auth-left">
-        <div class="auth-brand"><i class="fas fa-graduation-cap"></i> Vignan VITS</div>
-        <h1>Join the Portal Today</h1>
-        <p>Create your student account and start submitting complaints directly to the right department.</p>
-        <div class="auth-features">
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Free student account</div>
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Secure & private</div>
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Track all your complaints</div>
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Get official admin responses</div>
+        <div class="auth-brand"><i class="fas fa-building"></i> Skyline Residency</div>
+        <div>
+            <h1>Create Resident Account</h1>
+            <p>Register your apartment profile to get instant access to maintenance ticket registration and society updates.</p>
+            <div class="auth-features">
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Quick 1-minute registration</div>
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Instant complaint submission</div>
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Verified resident access</div>
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Automated status updates</div>
+            </div>
         </div>
-        <i class="fas fa-user-graduate auth-illustration"></i>
+        <p style="font-size: 0.8rem; opacity: 0.7; margin: 0;">&copy; Skyline Residency Management Committee</p>
     </div>
+    
     <div class="auth-right">
         <div class="auth-form-container">
             <div class="auth-header">
-                <h2>Create Account</h2>
-                <p>Fill in your details to get started</p>
+                <h2>Register Account</h2>
+                <p>Fill in your details and flat information</p>
             </div>
+            
             <% if (typeof error !== 'undefined' && error) { %>
-            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+            <div style="background: #FEE2E2; color: #DC2626; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.88rem; margin-bottom: 1.25rem;">
+                <i class="fas fa-exclamation-circle"></i> <%= error %>
+            </div>
             <% } %>
+
             <form action="/register" method="POST">
                 <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" name="full_name" class="form-control" required placeholder="Your full name" maxlength="100" />
+                    <label for="full_name">Full Name & Flat Number</label>
+                    <input type="text" id="full_name" name="full_name" class="form-control" required placeholder="e.g. Rahul Sharma (Flat A-402)" />
                 </div>
+
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required placeholder="you@student.vignan.ac.in" />
+                    <label for="email">Resident Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required placeholder="rahul.sharma@skylineresidency.com" />
                 </div>
+
                 <div class="form-group">
-                    <label for="phone">Phone <span class="optional">(optional)</span></label>
-                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="10-digit mobile number" maxlength="15" />
+                    <label for="phone">Mobile Number</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="10-digit mobile number" />
                 </div>
+
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <div class="input-group">
-                        <input type="password" id="password" name="password" class="form-control" required minlength="6" placeholder="Min 6 characters" />
-                        <button type="button" class="toggle-password" onclick="togglePwd('password','eye1')"><i class="fas fa-eye" id="eye1"></i></button>
-                    </div>
-                    <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
+                    <input type="password" id="password" name="password" class="form-control" required minlength="6" placeholder="Min 6 characters" />
                 </div>
+
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password</label>
-                    <div class="input-group">
-                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" required placeholder="Re-enter password" />
-                        <button type="button" class="toggle-password" onclick="togglePwd('confirm_password','eye2')"><i class="fas fa-eye" id="eye2"></i></button>
-                    </div>
-                    <div class="password-match" id="matchMsg"></div>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required placeholder="Re-enter password" />
                 </div>
-                <button type="submit" class="btn btn-primary btn-full btn-lg"><i class="fas fa-user-plus"></i> Create Account</button>
+
+                <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 0.85rem;">
+                    <i class="fas fa-user-plus"></i> Complete Registration
+                </button>
             </form>
-            <div class="auth-footer">Already have an account? <a href="/login">Sign in here</a></div>
+
+            <div class="auth-footer">
+                Already registered? <a href="/login">Sign in here</a>
+            </div>
         </div>
     </div>
 </div>
-<script>
-function togglePwd(id,iconId){const f=document.getElementById(id),i=document.getElementById(iconId);f.type=f.type==='password'?(i.classList.replace('fa-eye','fa-eye-slash'),'text'):(i.classList.replace('fa-eye-slash','fa-eye'),'password');}
-document.getElementById('password').addEventListener('input',function(){const v=this.value,bar=document.getElementById('strengthBar');bar.className='strength-bar '+(v.length<6?'strength-weak':v.length<10?'strength-medium':'strength-strong');});
-document.getElementById('confirm_password').addEventListener('input',function(){const p=document.getElementById('password').value,el=document.getElementById('matchMsg');el.textContent=this.value===p?'✓ Passwords match':'✗ Passwords do not match';el.className='password-match '+(this.value===p?'match-ok':'match-fail');});
-</script>
 </body>
 </html>

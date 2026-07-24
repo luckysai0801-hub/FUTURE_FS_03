@@ -1,5 +1,6 @@
 // =============================================
 // config/db.js - MySQL Database Connection
+// Skyline Residency – Smart Apartment Complaint & Maintenance Portal
 // =============================================
 
 const mysql = require('mysql2');
@@ -25,7 +26,7 @@ pool.getConnection((err, connection) => {
         console.error('❌ Database connection failed:', err.message);
         console.error('   Make sure MySQL is running and credentials in .env are correct');
     } else {
-        console.log('✅ MySQL Database connected successfully!');
+        console.log('✅ Skyline Residency DB connected successfully!');
         connection.release(); // release back to pool
     }
 });

@@ -1,14 +1,22 @@
 {
-  "name": "complaint-management-system",
+  "name": "skyline-residency-portal",
   "version": "1.0.0",
-  "description": "College Complaint Management System - Vignan Engineering College",
+  "description": "Skyline Residency – Smart Apartment Complaint & Maintenance Portal",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["complaint", "management", "nodejs", "mysql", "express"],
-  "author": "Vignan Engineering College",
+  "keywords": [
+    "skyline-residency",
+    "apartment-management",
+    "complaint-portal",
+    "maintenance",
+    "nodejs",
+    "mysql",
+    "express"
+  ],
+  "author": "Skyline Residency Management Committee",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",

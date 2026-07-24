@@ -3,131 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports — Admin CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Analytics & Reports – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="dashboard-body">
+
 <%- include('../partials/admin-sidebar', { activePage: 'reports' }) %>
+
 <div class="main-content" id="mainContent">
     <div class="topbar">
         <div class="topbar-left">
-            <div class="breadcrumb"><span>Admin</span><i class="fas fa-chevron-right"></i><span>Reports</span></div>
-            <h1><i class="fas fa-chart-bar"></i> Reports &amp; Analytics</h1>
-            <p>System-wide complaint statistics and export options</p>
+            <h1><i class="fas fa-file-invoice" style="color: var(--secondary);"></i> Analytics & Reports</h1>
+            <p>Comprehensive maintenance statistics, category breakdown, and official audit exports</p>
         </div>
-        <div class="topbar-right" style="display:flex; gap:10px; align-items:center;">
-            <a href="/admin/export/csv" class="btn btn-outline" id="btn-export-csv" style="display:flex;align-items:center;gap:6px;">
-                <i class="fas fa-file-csv"></i> Export CSV
-            </a>
-            <a href="/admin/export/pdf" target="_blank" class="btn btn-primary" id="btn-export-pdf" style="display:flex;align-items:center;gap:6px;">
-                <i class="fas fa-file-pdf"></i> Export PDF
-            </a>
+        <div class="topbar-right" style="display: flex; gap: 0.75rem;">
+            <a href="/admin/export/csv" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Download CSV</a>
+            <a href="/admin/export/pdf" target="_blank" class="btn btn-primary"><i class="fas fa-file-pdf"></i> Print / Export PDF Audit</a>
         </div>
     </div>
 
-    <div class="stats-grid stats-grid-6">
-        <div class="stat-card stat-total"><div class="stat-icon"><i class="fas fa-folder-open"></i></div><div class="stat-info"><h3><%= stats.total||0 %></h3><p>Total</p></div></div>
-        <div class="stat-card stat-pending"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h3><%= stats.pending||0 %></h3><p>Pending</p></div></div>
-        <div class="stat-card stat-progress"><div class="stat-icon"><i class="fas fa-spinner"></i></div><div class="stat-info"><h3><%= stats.in_progress||0 %></h3><p>In Progress</p></div></div>
-        <div class="stat-card stat-resolved"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h3><%= stats.resolved||0 %></h3><p>Resolved</p></div></div>
-        <div class="stat-card stat-rejected"><div class="stat-icon"><i class="fas fa-times-circle"></i></div><div class="stat-info"><h3><%= stats.rejected||0 %></h3><p>Rejected</p></div></div>
-        <div class="stat-card stat-users"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><h3><%= stats.users||0 %></h3><p>Students</p></div></div>
+    <!-- Overview Stats -->
+    <div class="stats-grid-7">
+        <div class="stat-card stat-total">
+            <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.total || 0 %></h3>
+                <p>Total Complaints</p>
+            </div>
+        </div>
+        <div class="stat-card stat-pending">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.pending || 0 %></h3>
+                <p>Pending</p>
+            </div>
+        </div>
+        <div class="stat-card stat-progress">
+            <div class="stat-icon"><i class="fas fa-tools"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.in_progress || 0 %></h3>
+                <p>In Progress</p>
+            </div>
+        </div>
+        <div class="stat-card stat-resolved">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.resolved || 0 %></h3>
+                <p>Resolved</p>
+            </div>
+        </div>
+        <div class="stat-card stat-rejected">
+            <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-info">
+                <h3><%= stats.rejected || 0 %></h3>
+                <p>Rejected</p>
+            </div>
+        </div>
     </div>
 
+    <!-- Resolution Rate -->
     <% if (stats.total > 0) { %>
-    <div class="card" style="margin-bottom:1.5rem">
-        <div class="card-header"><h3><i class="fas fa-chart-line"></i> Resolution Rate</h3></div>
-        <div class="card-body">
-            <div class="resolution-label">Complaints Resolved<span class="resolution-percent"><%= Math.round((stats.resolved/stats.total)*100) %>%</span></div>
-            <div class="resolution-bar-bg"><div class="resolution-bar" data-width="<%= Math.round((stats.resolved/stats.total)*100) %>"></div></div>
+    <% const resPercent = Math.round((stats.resolved / stats.total) * 100); %>
+    <div class="table-card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="resolution-label">
+            <span>Complaints Overall Resolution Rate</span>
+            <span class="resolution-percent"><%= resPercent %>%</span>
+        </div>
+        <div class="resolution-bar-bg">
+            <div class="resolution-bar" style="<%= 'width: ' + resPercent + '%' %>"></div>
         </div>
     </div>
     <% } %>
 
+    <!-- Grid Reports: Category & Department (Flat/Block) -->
     <div class="reports-grid">
-        <div class="card">
-            <div class="card-header"><h3><i class="fas fa-tag"></i> By Category</h3></div>
-            <div class="card-body" style="padding:0">
-                <table class="data-table">
-                    <thead><tr><th>Category</th><th>Total</th><th>Resolved</th><th>Rate</th></tr></thead>
+        <!-- Category Breakdown -->
+        <div class="table-card">
+            <div class="table-header">
+                <h3><i class="fas fa-tags" style="color: var(--primary); margin-right: 6px;"></i> By Category</h3>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Total</th>
+                            <th>Resolved</th>
+                            <th>Rate</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <% byCategory.forEach(cat => { %>
+                        <% const catRate = cat.count > 0 ? Math.round((cat.resolved / cat.count) * 100) : 0; %>
                         <tr>
-                            <td><span class="category-badge"><%= cat.category %></span></td>
-                            <td style="font-weight:700"><%= cat.count %></td>
-                            <td style="color:var(--success);font-weight:600"><%= cat.resolved %></td>
-                            <td><div class="mini-bar-wrap"><div class="mini-bar mini-bar-green" data-width="<%= cat.count>0?Math.round((cat.resolved/cat.count)*100):0 %>"></div><span><%= cat.count>0?Math.round((cat.resolved/cat.count)*100):0 %>%</span></div></td>
+                            <td><strong><%= cat.category %></strong></td>
+                            <td style="font-weight: 700;"><%= cat.count %></td>
+                            <td style="color: var(--secondary-hover); font-weight: 700;"><%= cat.resolved %></td>
+                            <td>
+                                <div class="mini-bar-wrap">
+                                    <div class="mini-bar mini-bar-green" style="<%= 'width: ' + catRate + 'px' %>"></div>
+                                    <span><%= catRate %>%</span>
+                                </div>
+                            </td>
                         </tr>
                         <% }) %>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header"><h3><i class="fas fa-building"></i> By Department</h3></div>
-            <div class="card-body" style="padding:0">
-                <table class="data-table">
-                    <thead><tr><th>Department</th><th>Total</th><th>Resolved</th><th>Rate</th></tr></thead>
+
+        <!-- Location Breakdown -->
+        <div class="table-card">
+            <div class="table-header">
+                <h3><i class="fas fa-building" style="color: var(--primary); margin-right: 6px;"></i> By Flat / Block Location</h3>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Flat / Block</th>
+                            <th>Total</th>
+                            <th>Resolved</th>
+                            <th>Rate</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <% byDepartment.forEach(dep => { %>
+                        <% const depRate = dep.count > 0 ? Math.round((dep.resolved / dep.count) * 100) : 0; %>
                         <tr>
-                            <td style="font-weight:600"><%= dep.department %></td>
-                            <td style="font-weight:700"><%= dep.count %></td>
-                            <td style="color:var(--success);font-weight:600"><%= dep.resolved %></td>
-                            <td><div class="mini-bar-wrap"><div class="mini-bar mini-bar-blue" data-width="<%= dep.count>0?Math.round((dep.resolved/dep.count)*100):0 %>"></div><span><%= dep.count>0?Math.round((dep.resolved/dep.count)*100):0 %>%</span></div></td>
+                            <td><strong><%= dep.department %></strong></td>
+                            <td style="font-weight: 700;"><%= dep.count %></td>
+                            <td style="color: var(--secondary-hover); font-weight: 700;"><%= dep.resolved %></td>
+                            <td>
+                                <div class="mini-bar-wrap">
+                                    <div class="mini-bar mini-bar-blue" style="<%= 'width: ' + depRate + 'px' %>"></div>
+                                    <span><%= depRate %>%</span>
+                                </div>
+                            </td>
                         </tr>
                         <% }) %>
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header"><h3><i class="fas fa-exclamation-triangle"></i> Priority Distribution</h3></div>
-        <div class="card-body">
-            <div class="priority-distribution">
-                <% byPriority.forEach(p => { %>
-                <div class="priority-dist-item">
-                    <span class="priority-badge priority-<%= p.priority.toLowerCase() %>" style="min-width:75px;justify-content:center"><%= p.priority %></span>
-                    <div class="priority-bar-wrap"><div class="priority-bar priority-bar-<%= p.priority.toLowerCase() %>" data-width="<%= stats.total>0?Math.round((p.count/stats.total)*100):0 %>"></div></div>
-                    <span class="priority-count"><%= p.count %> (<%= stats.total>0?Math.round((p.count/stats.total)*100):0 %>%)</span>
-                </div>
-                <% }) %>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header"><h3><i class="fas fa-check-double"></i> Recently Resolved</h3></div>
-        <div class="card-body" style="padding:0">
-            <% if (recentResolved.length === 0) { %><div class="empty-state"><i class="fas fa-inbox"></i><h4>No resolved complaints yet</h4></div>
-            <% } else { %>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Student</th><th>Resolved On</th></tr></thead>
-                    <tbody>
-                        <% recentResolved.forEach(c => { %>
-                        <tr>
-                            <td><span class="complaint-id"><%= c.complaint_id %></span></td>
-                            <td class="complaint-title"><%= c.title %></td>
-                            <td><span class="category-badge"><%= c.category %></span></td>
-                            <td style="font-size:0.85rem"><%= c.user_name %></td>
-                            <td style="color:var(--success);font-size:0.8rem;font-weight:600"><%= new Date(c.updated_at).toLocaleDateString('en-IN') %></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-            <% } %>
         </div>
     </div>
 </div>
+
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
-<script>document.querySelectorAll('[data-width]').forEach(el=>{el.style.width=el.getAttribute('data-width')+'%';});</script>
 </body>
 </html>
+

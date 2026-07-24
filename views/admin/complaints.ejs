@@ -3,77 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Complaints — Admin CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Manage Complaints – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="dashboard-body">
+
 <%- include('../partials/admin-sidebar', { activePage: 'complaints' }) %>
+
 <div class="main-content" id="mainContent">
     <div class="topbar">
         <div class="topbar-left">
-            <div class="breadcrumb"><span>Admin</span><i class="fas fa-chevron-right"></i><span>Complaints</span></div>
-            <h1><i class="fas fa-folder-open"></i> All Complaints</h1>
+            <h1><i class="fas fa-clipboard-list" style="color: var(--secondary);"></i> All Apartment Complaints</h1>
+            <p>Manage, review, assign technicians, and update status for all resident tickets</p>
+        </div>
+        <div class="topbar-right">
+            <a href="/admin/export/csv" class="btn btn-secondary"><i class="fas fa-download"></i> Export CSV</a>
+            <a href="/admin/export/pdf" class="btn btn-light" target="_blank"><i class="fas fa-print"></i> PDF Audit Report</a>
         </div>
     </div>
 
-    <% if (typeof success !== 'undefined' && success) { %><div class="alert alert-success fade-in"><i class="fas fa-check-circle"></i> <%= success %><button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button></div><% } %>
-
-    <div class="card filter-card">
-        <div class="card-body" style="padding:1rem 1.5rem">
-            <form method="GET" action="/admin/complaints">
-                <div class="filter-row">
-                    <div class="filter-group" style="flex:2"><label>Search</label><input type="text" name="search" class="form-control" placeholder="Search by ID, title, student..." value="<%= typeof filters !== 'undefined' ? (filters.search||'') : '' %>" /></div>
-                    <div class="filter-group"><label>Status</label>
-                        <select name="status" class="form-control"><option value="">All Status</option>
-                        <% ['Pending','In Progress','Resolved','Rejected'].forEach(s=>{%><option value="<%= s %>" <%=(typeof filters!=='undefined'&&filters.status===s)?'selected':''%>><%= s %></option><%})%></select>
-                    </div>
-                    <div class="filter-group"><label>Category</label>
-                        <select name="category" class="form-control"><option value="">All Categories</option>
-                        <%['Infrastructure','Academic','Hostel','Library','Transport','Canteen','IT / Network','Electrical','Sanitation','Sports','Administrative','Other'].forEach(cat=>{%><option value="<%= cat %>" <%=(typeof filters!=='undefined'&&filters.category===cat)?'selected':''%>><%= cat %></option><%})%></select>
-                    </div>
-                    <div class="filter-group"><label>Priority</label>
-                        <select name="priority" class="form-control"><option value="">All Priorities</option>
-                        <%['High','Medium','Low'].forEach(p=>{%><option value="<%= p %>" <%=(typeof filters!=='undefined'&&filters.priority===p)?'selected':''%>><%= p %></option><%})%></select>
-                    </div>
-                    <div class="filter-actions"><button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button><a href="/admin/complaints" class="btn btn-outline"><i class="fas fa-times"></i></a></div>
-                </div>
-            </form>
-        </div>
+    <% if (typeof success !== 'undefined' && success) { %>
+    <div style="background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <i class="fas fa-check-circle" style="margin-right: 6px;"></i> <%= success %>
     </div>
+    <% } %>
 
-    <div class="card">
-        <div class="card-header"><h3><i class="fas fa-list"></i> Results (<%= complaints.length %>)</h3></div>
-        <div class="card-body" style="padding:0">
-            <% if (complaints.length === 0) { %>
-            <div class="empty-state"><i class="fas fa-inbox"></i><h4>No complaints found</h4></div>
-            <% } else { %>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead><tr><th>ID</th><th>Title</th><th>Student</th><th>Category</th><th>Dept</th><th>Priority</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
-                    <tbody>
-                        <% complaints.forEach(c => { %>
-                        <tr>
-                            <td><span class="complaint-id"><%= c.complaint_id %></span></td>
-                            <td class="complaint-title"><%= c.title %></td>
-                            <td><div class="user-cell"><strong><%= c.user_name %></strong><small><%= c.user_email %></small></div></td>
-                            <td><span class="category-badge"><%= c.category %></span></td>
-                            <td style="font-size:0.8rem;color:var(--text-muted)"><%= c.department %></td>
-                            <td><span class="priority-badge priority-<%= c.priority.toLowerCase() %>"><%= c.priority %></span></td>
-                            <td><span class="status-badge status-<%= c.status.toLowerCase().replace(' ','-') %>"><%= c.status %></span></td>
-                            <td style="color:var(--text-muted);font-size:0.78rem"><%= new Date(c.created_at).toLocaleDateString('en-IN') %></td>
-                            <td><a href="/admin/complaints/<%= c.id %>" class="btn btn-xs btn-view"><i class="fas fa-eye"></i> View</a></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+    <!-- Search & Filter Card -->
+    <div class="table-card" style="padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;">
+        <form method="GET" action="/admin/complaints" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+            <div style="flex: 2; min-width: 200px;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Search Ticket ID / Resident / Flat</label>
+                <input type="text" name="search" class="form-control" placeholder="Search..." value="<%= typeof filters !== 'undefined' ? (filters.search || '') : '' %>" />
             </div>
-            <% } %>
+
+            <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Status</label>
+                <select name="status" class="form-control">
+                    <option value="">All Statuses</option>
+                    <% ['Pending','In Progress','Resolved','Rejected'].forEach(s => { %>
+                    <option value="<%= s %>" <%= (typeof filters !== 'undefined' && filters.status === s) ? 'selected' : '' %>><%= s %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div style="flex: 1; min-width: 170px;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Category</label>
+                <select name="category" class="form-control">
+                    <option value="">All 12 Categories</option>
+                    <% [
+                        'Water Leakage',
+                        'Electrical Issue',
+                        'Lift Problem',
+                        'Parking Issue',
+                        'Security Complaint',
+                        'Housekeeping',
+                        'Garbage Collection',
+                        'Water Supply',
+                        'Plumbing',
+                        'Garden Maintenance',
+                        'Street Lighting',
+                        'Other'
+                    ].forEach(cat => { %>
+                    <option value="<%= cat %>" <%= (typeof filters !== 'undefined' && filters.category === cat) ? 'selected' : '' %>><%= cat %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div style="flex: 1; min-width: 120px;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Priority</label>
+                <select name="priority" class="form-control">
+                    <option value="">All Priorities</option>
+                    <% ['High','Medium','Low'].forEach(p => { %>
+                    <option value="<%= p %>" <%= (typeof filters !== 'undefined' && filters.priority === p) ? 'selected' : '' %>><%= p %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
+                <a href="/admin/complaints" class="btn btn-light"><i class="fas fa-redo"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3><i class="fas fa-table" style="color: var(--primary); margin-right: 8px;"></i> Complaint Records (<%= complaints.length %>)</h3>
         </div>
+
+        <% if (complaints.length === 0) { %>
+        <div style="padding: 3rem; text-align: center; color: var(--text-muted);">
+            <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; color: var(--border-light);"></i>
+            <h4>No complaint records found</h4>
+        </div>
+        <% } else { %>
+        <div style="overflow-x: auto;">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Title</th>
+                        <th>Resident</th>
+                        <th>Category</th>
+                        <th>Flat Location</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assigned Staff</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% complaints.forEach(c => { %>
+                    <tr>
+                        <td><strong style="color: var(--primary);"><%= c.complaint_id %></strong></td>
+                        <td><strong><%= c.title %></strong></td>
+                        <td>
+                            <div style="font-weight: 700;"><%= c.user_name %></div>
+                            <small style="color: var(--text-muted); font-size: 0.75rem;"><%= c.user_email %></small>
+                        </td>
+                        <td><span style="font-size: 0.85rem; font-weight: 600;"><%= c.category %></span></td>
+                        <td><%= c.department %></td>
+                        <td><span class="badge badge-priority-<%= c.priority.toLowerCase() %>"><%= c.priority %></span></td>
+                        <td><span class="badge badge-<%= c.status.toLowerCase().replace(' ', '-') %>"><%= c.status %></span></td>
+                        <td>
+                            <% if (c.assigned_to) { %>
+                                <span style="font-size: 0.82rem; font-weight: 600; color: var(--secondary-hover);"><i class="fas fa-user-cog"></i> <%= c.assigned_to %></span>
+                            <% } else { %>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Unassigned</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.4rem;">
+                                <a href="/admin/complaints/<%= c.id %>" class="btn btn-light" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                                    <i class="fas fa-edit"></i> Manage
+                                </a>
+                                <form action="/admin/complaints/<%= c.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete complaint ticket <%= c.complaint_id %>?');" style="display: inline;">
+                                    <button type="submit" class="btn btn-light" style="color: #DC2626; padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
     </div>
 </div>
+
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
 </body>
 </html>

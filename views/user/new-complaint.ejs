@@ -3,169 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Complaint — CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Register Complaint – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/complaints.css">
 </head>
-<body class="dashboard-body">
-<%- include('../partials/sidebar', { activePage: 'new-complaint' }) %>
-<div class="main-content" id="mainContent">
-    <div class="topbar">
-        <div class="topbar-left">
-            <div class="breadcrumb"><a href="/dashboard">Dashboard</a><i class="fas fa-chevron-right"></i><span>New Complaint</span></div>
-            <h1><i class="fas fa-plus-circle"></i> Submit Complaint</h1>
-            <p>Fill in the details below to submit your complaint</p>
-        </div>
-        <a href="/dashboard" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+<body style="background: var(--bg); min-height: 100vh; display: flex; flex-direction: column;">
+
+<%- include('../partials/navbar') %>
+
+<div class="container" style="padding: 3rem 1.5rem; flex: 1;">
+    
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
+            <i class="fas fa-edit" style="color: var(--primary); margin-right: 8px;"></i> Register Maintenance Complaint
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">
+            Submit a maintenance request for your apartment unit or common area. No account login required!
+        </p>
     </div>
 
-    <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error fade-in"><i class="fas fa-exclamation-circle"></i> <%= error %><button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button></div><% } %>
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <i class="fas fa-exclamation-circle" style="margin-right: 6px;"></i> <%= error %>
+    </div>
+    <% } %>
 
-    <div class="card form-card">
-        <div class="card-header"><h3><i class="fas fa-edit"></i> Complaint Details</h3></div>
+    <div class="form-card">
         <div class="card-body">
             <form action="/complaints" method="POST" enctype="multipart/form-data" id="complaintForm">
-                <div class="form-group">
-                    <label for="title">Complaint Title *</label>
-                    <input type="text" id="title" name="title" class="form-control" required maxlength="150" placeholder="Brief, clear title describing the issue" />
-                    <span class="char-count"><span id="titleCount">0</span>/150</span>
-                </div>
-                <div class="form-row">
+                
+                <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">
+                    1. Resident & Flat Information
+                </h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;" class="form-grid">
                     <div class="form-group">
-                        <label for="category">Category *</label>
+                        <label for="resident_name">Full Name *</label>
+                        <input type="text" id="resident_name" name="resident_name" class="form-control" required placeholder="e.g. Rahul Sharma" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile_number">Mobile Number * <small style="color: var(--text-muted); font-weight: normal;">(10-digit number)</small></label>
+                        <input type="tel" id="mobile_number" name="mobile_number" class="form-control" required pattern="[0-9]{10}" maxlength="10" placeholder="e.g. 9876543210" />
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 1.5rem;" class="form-grid">
+                    <div class="form-group">
+                        <label for="block_wing">Block / Wing *</label>
+                        <select id="block_wing" name="block_wing" class="form-control" required>
+                            <option value="" disabled selected>Select Block...</option>
+                            <option value="Tower A">Tower A</option>
+                            <option value="Tower B">Tower B</option>
+                            <option value="Tower C">Tower C</option>
+                            <option value="Tower D">Tower D</option>
+                            <option value="Tower E">Tower E</option>
+                            <option value="Tower F">Tower F</option>
+                            <option value="Clubhouse">Clubhouse / Common Area</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="flat_number">Flat Number *</label>
+                        <input type="text" id="flat_number" name="flat_number" class="form-control" required placeholder="e.g. Flat 402" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address <span style="color: var(--text-muted); font-weight: normal;">(Optional)</span></label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="e.g. rahul.sharma@gmail.com" />
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-top: 1.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">
+                    2. Complaint Details
+                </h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;" class="form-grid">
+                    <div class="form-group">
+                        <label for="category">Maintenance Category *</label>
                         <select id="category" name="category" class="form-control" required>
                             <option value="" disabled selected>Select category...</option>
-                            <% ['Infrastructure','Academic','Hostel','Library','Transport','Canteen','IT / Network','Electrical','Sanitation','Sports','Administrative','Other'].forEach(cat => { %>
+                            <% [
+                                'Water Leakage',
+                                'Electrical Issue',
+                                'Lift Problem',
+                                'Parking Issue',
+                                'Security Complaint',
+                                'Housekeeping',
+                                'Garbage Collection',
+                                'Water Supply',
+                                'Plumbing',
+                                'Garden Maintenance',
+                                'Street Lighting',
+                                'Other'
+                            ].forEach(cat => { %>
                             <option value="<%= cat %>"><%= cat %></option>
                             <% }) %>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="department">Department *</label>
-                        <select id="department" name="department" class="form-control" required>
-                            <option value="" disabled selected>Select department...</option>
-                            <% [['CSE','Computer Science (CSE)'],['ECE','Electronics & Comm (ECE)'],['EEE','Electrical Engg (EEE)'],['MECH','Mechanical Engg (MECH)'],['CIVIL','Civil Engg (CIVIL)'],['IT','Information Technology (IT)'],['MBA','MBA'],['MCA','MCA'],['General','General / All Departments'],['Admin Office','Admin Office'],['Hostel','Hostel'],['Library','Library']].forEach(dep => { %>
-                            <option value="<%= dep[0] %>"><%= dep[1] %></option>
-                            <% }) %>
-                        </select>
+                        <label for="title">Complaint Title *</label>
+                        <input type="text" id="title" name="title" class="form-control" required maxlength="150" placeholder="e.g. Master Bathroom Pipe Seepage" />
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Priority Level *</label>
                     <div class="priority-options">
-                        <label class="priority-option priority-low-opt"><input type="radio" name="priority" value="Low" required /><span><i class="fas fa-arrow-down"></i> Low</span></label>
-                        <label class="priority-option priority-medium-opt"><input type="radio" name="priority" value="Medium" /><span><i class="fas fa-minus"></i> Medium</span></label>
-                        <label class="priority-option priority-high-opt"><input type="radio" name="priority" value="High" /><span><i class="fas fa-arrow-up"></i> High</span></label>
+                        <label class="priority-option priority-low-opt">
+                            <input type="radio" name="priority" value="Low" required />
+                            <span><i class="fas fa-arrow-down"></i> Low Priority</span>
+                        </label>
+                        <label class="priority-option priority-medium-opt">
+                            <input type="radio" name="priority" value="Medium" checked />
+                            <span><i class="fas fa-minus"></i> Medium Priority</span>
+                        </label>
+                        <label class="priority-option priority-high-opt">
+                            <input type="radio" name="priority" value="High" />
+                            <span><i class="fas fa-arrow-up"></i> High Priority</span>
+                        </label>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="description">Description *</label>
-                    <textarea id="description" name="description" class="form-control" rows="5" required minlength="20" maxlength="2000" placeholder="Describe the issue in detail..."></textarea>
-                    <span class="char-count"><span id="descCount">0</span>/2000</span>
+                    <label for="description">Complaint Description * <small style="color: var(--text-muted); font-weight: normal;">(Minimum 20 characters)</small></label>
+                    <textarea id="description" name="description" class="form-control" rows="5" required minlength="20" maxlength="2000" placeholder="Please describe the issue in detail (at least 20 characters)..."></textarea>
+                    <small style="color: var(--text-muted); font-size: 0.78rem; display: block; margin-top: 4px;"><span id="descCount">0</span>/2000 characters</small>
                 </div>
+
                 <div class="form-group">
-                    <label>Attach Image <span class="optional">(Optional)</span></label>
+                    <label>Attach Image <span style="color: var(--text-muted); font-weight: normal;">(Optional photo proof)</span></label>
                     <div class="file-upload-area" id="fileUploadArea">
-                        <input type="file" id="image" name="image" accept="image/*" class="file-input" onchange="previewImage(this)" />
+                        <input type="file" id="image" name="image" accept="image/*" class="file-input" />
                         <div class="file-upload-label" id="fileLabel">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Click or drag & drop an image</p>
-                            <span>Max 5MB — JPG, PNG, WEBP</span>
+                            <p>Click or drag & drop photo of issue</p>
+                            <span>Supports JPG, PNG, WEBP (Max 5MB)</span>
                         </div>
-                        <img id="imagePreview" class="image-preview" style="display:none" alt="Preview" />
+                        <img id="imagePreview" class="image-preview" style="display:none" alt="Uploaded Image Preview" />
                     </div>
                 </div>
-                <div class="form-actions">
-                    <a href="/dashboard" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
-                    <button type="submit" class="btn btn-primary btn-lg" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <a href="/" class="btn btn-light"><i class="fas fa-times"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="padding: 0.85rem 2rem; font-size: 1.05rem;">
+                        <i class="fas fa-paper-plane"></i> Submit Complaint
+                    </button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
+<%- include('../partials/footer') %>
+
+<script src="/js/main.js"></script>
 <script src="/js/complaints.js"></script>
-<script>
-// ── Character Counters ────────────────────────────────────────────────────────
-const titleEl=document.getElementById('title'), titleCount=document.getElementById('titleCount');
-const descEl=document.getElementById('description'), descCount=document.getElementById('descCount');
-if(titleEl) titleEl.addEventListener('input', () => { titleCount.textContent = titleEl.value.length; analyzePriority(); });
-if(descEl)  descEl.addEventListener('input',  () => { descCount.textContent  = descEl.value.length;  analyzePriority(); });
-
-// ── Image Preview ─────────────────────────────────────────────────────────────
-function previewImage(input){
-    const prev=document.getElementById('imagePreview'), label=document.getElementById('fileLabel');
-    if(input.files && input.files[0]){
-        const r=new FileReader();
-        r.onload=e=>{prev.src=e.target.result; prev.style.display='block'; label.style.display='none';};
-        r.readAsDataURL(input.files[0]);
-    }
-}
-
-document.getElementById('complaintForm').onsubmit=function(){
-    const b=document.getElementById('submitBtn');
-    b.innerHTML='<i class="fas fa-spinner fa-spin"></i> Submitting...';
-    b.disabled=true;
-};
-
-// ── 🤖 Smart Priority Engine ──────────────────────────────────────────────────
-const HIGH_KEYWORDS = [
-    'fire','smoke','smoking','flames','burning','explosion','blast',
-    'flood','water leaking','water leak','broken pipe','pipe burst',
-    'electric shock','short circuit','power cut','no power',
-    'dangerous','hazard','urgent','emergency','critical','severe',
-    'injured','injury','hurt','blood','accident','crash','fell',
-    'sexual harassment','harassment','threat','stalking','violence',
-    'exam hall','during exam','cannot attend exam',
-    'not working since','days ago','weeks ago','no response'
-];
-
-const MEDIUM_KEYWORDS = [
-    'slow','not working','broken','damaged','faulty','malfunction',
-    'noisy','smell','dirty','unhygienic','not available','missing',
-    'delayed','issue','problem','complaint','error','failure'
-];
-
-// Build the priority banner HTML (inject once)
-const prioritySection = document.querySelector('.priority-options').parentElement;
-const banner = document.createElement('div');
-banner.id = 'smart-priority-banner';
-banner.style.cssText = 'display:none; margin-top:10px; padding:10px 14px; border-radius:8px; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px; transition:all 0.3s ease;';
-prioritySection.appendChild(banner);
-
-function analyzePriority() {
-    const text = ((titleEl ? titleEl.value : '') + ' ' + (descEl ? descEl.value : '')).toLowerCase();
-    if (text.trim().length < 5) { banner.style.display = 'none'; return; }
-
-    const matchedHigh   = HIGH_KEYWORDS.filter(k => text.includes(k));
-    const matchedMedium = MEDIUM_KEYWORDS.filter(k => text.includes(k));
-
-    if (matchedHigh.length > 0) {
-        setSuggestedPriority('High', matchedHigh[0]);
-    } else if (matchedMedium.length > 0) {
-        setSuggestedPriority('Medium', matchedMedium[0]);
-    } else {
-        banner.style.display = 'none';
-    }
-}
-
-function setSuggestedPriority(level, keyword) {
-    // Auto-select the radio button
-    const radio = document.querySelector(`input[name="priority"][value="${level}"]`);
-    if (radio && !radio.checked) { radio.checked = true; }
-
-    // Show the smart banner
-    const colors = {
-        High:   { bg:'#fee2e2', border:'#ef4444', text:'#991b1b', icon:'🚨' },
-        Medium: { bg:'#fef3c7', border:'#f59e0b', text:'#92400e', icon:'⚠️' },
-        Low:    { bg:'#d1fae5', border:'#10b981', text:'#065f46', icon:'✅' }
-    };
-    const c = colors[level];
-    banner.style.cssText = `margin-top:10px; padding:10px 14px; border-radius:8px; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px; background:${c.bg}; border-left:4px solid ${c.border}; color:${c.text}; animation: fadeIn 0.3s ease;`;
-    banner.innerHTML = `${c.icon} <strong>Smart Priority Engine:</strong>&nbsp; Keyword "<em>${keyword}</em>" detected — Priority auto-set to <strong>${level}</strong>`;
-}
-</script>
 </body>
 </html>

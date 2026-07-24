@@ -1,27 +1,68 @@
-/* admin.css — Admin-specific Premium Styles */
+/* ================================================================
+   admin.css — Society Manager Admin Panel Specific Styles
+   Skyline Residency – Smart Apartment Portal
+   ================================================================ */
 
-.reports-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem; }
+.reports-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;
+}
 
-.resolution-label { font-size:0.88rem; font-weight:700; margin-bottom:0.6rem; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
-.resolution-percent { font-size:1.5rem; font-weight:800; color:var(--success); }
-.resolution-bar-bg { height:12px; background:var(--surface-soft); border-radius:8px; overflow:hidden; border:1px solid var(--border); }
-.resolution-bar { height:100%; background:linear-gradient(90deg,var(--success),#34D399); border-radius:8px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.resolution-label {
+  font-size: 0.9rem; font-weight: 700; margin-bottom: 0.6rem;
+  color: var(--text-main); display: flex; align-items: center; justify-content: space-between;
+}
 
-.mini-bar-wrap { display:flex; align-items:center; gap:0.6rem; }
-.mini-bar { height:6px; border-radius:3px; min-width:2px; max-width:100px; flex-shrink:0; }
-.mini-bar-green { background:var(--success); }
-.mini-bar-blue  { background:var(--primary); }
-.mini-bar-wrap span { font-size:0.78rem; color:var(--text-muted); font-weight:700; white-space:nowrap; }
+.resolution-percent {
+  font-size: 1.8rem; font-weight: 800; color: var(--secondary-hover);
+}
 
-.priority-distribution { display:flex; flex-direction:column; gap:1rem; }
-.priority-dist-item { display:flex; align-items:center; gap:1rem; }
-.priority-bar-wrap { flex:1; height:10px; background:var(--surface-soft); border-radius:5px; overflow:hidden; border:1px solid var(--border); }
-.priority-bar { height:100%; border-radius:5px; min-width:2px; transition:width 1s ease; }
-.priority-bar-low    { background:var(--success); }
-.priority-bar-medium { background:var(--warning); }
-.priority-bar-high   { background:var(--danger); }
-.priority-count { font-size:0.78rem; color:var(--text-muted); min-width:130px; text-align:right; font-weight:500; }
+.resolution-bar-bg {
+  height: 12px; background: #F1F5F9; border-radius: 8px;
+  overflow: hidden; border: 1px solid var(--border-light);
+}
 
-.admin-action-card .card-header { background:linear-gradient(135deg,#ECFDF5,#D1FAE5); border-bottom-color:#A7F3D0; }
+.resolution-bar {
+  height: 100%; background: linear-gradient(90deg, var(--secondary), #059669);
+  border-radius: 8px; transition: width 1s ease-in-out;
+}
 
-@media (max-width:768px) { .reports-grid { grid-template-columns:1fr; } }
+.mini-bar-wrap {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+
+.mini-bar {
+  height: 8px; border-radius: 4px; min-width: 4px; max-width: 120px;
+}
+
+.mini-bar-green { background: var(--secondary); }
+.mini-bar-blue  { background: var(--primary); }
+
+.mini-bar-wrap span {
+  font-size: 0.8rem; color: var(--text-muted); font-weight: 700;
+}
+
+.priority-distribution {
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+
+.priority-dist-item {
+  display: flex; align-items: center; gap: 1rem;
+}
+
+.priority-bar-wrap {
+  flex: 1; height: 10px; background: #F1F5F9; border-radius: 5px;
+  overflow: hidden; border: 1px solid var(--border-light);
+}
+
+.priority-bar { height: 100%; border-radius: 5px; }
+.priority-bar-low    { background: var(--secondary); }
+.priority-bar-medium { background: var(--status-pending); }
+.priority-bar-high   { background: var(--status-rejected); }
+
+.admin-action-card .card-header {
+  background: #EFF6FF; border-bottom-color: #BFDBFE;
+}
+
+@media (max-width: 768px) {
+  .reports-grid { grid-template-columns: 1fr; }
+}

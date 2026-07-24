@@ -3,103 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint Detail — Admin CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Manage Ticket – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/complaints.css">
 </head>
 <body class="dashboard-body">
+
 <%- include('../partials/admin-sidebar', { activePage: 'complaints' }) %>
+
 <div class="main-content" id="mainContent">
     <div class="topbar">
         <div class="topbar-left">
-            <div class="breadcrumb"><span>Admin</span><i class="fas fa-chevron-right"></i><a href="/admin/complaints">Complaints</a><i class="fas fa-chevron-right"></i><span><%= complaint.complaint_id %></span></div>
-            <h1><i class="fas fa-file-alt"></i> Complaint Detail</h1>
+            <h1><i class="fas fa-edit" style="color: var(--secondary);"></i> Ticket Management: <%= complaint.complaint_id %></h1>
+            <p>Review resident request, assign maintenance staff, and update ticket status</p>
         </div>
-        <a href="/admin/complaints" class="btn btn-outline"><i class="fas fa-arrow-left"></i> All Complaints</a>
+        <div class="topbar-right">
+            <a href="/admin/complaints" class="btn btn-light"><i class="fas fa-arrow-left"></i> All Complaints</a>
+        </div>
     </div>
 
-    <% if (typeof success !== 'undefined' && success) { %><div class="alert alert-success fade-in"><i class="fas fa-check-circle"></i> <%= success %><button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button></div><% } %>
+    <% if (typeof success !== 'undefined' && success) { %>
+    <div style="background: #D1FAE5; color: #059669; border: 1px solid #A7F3D0; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <i class="fas fa-check-circle" style="margin-right: 6px;"></i> <%= success %>
+    </div>
+    <% } %>
 
-    <div class="detail-grid">
-        <div class="detail-main">
-            <div class="card">
-                <div class="card-header"><h3><i class="fas fa-info-circle"></i> <%= complaint.title %></h3><span class="status-badge status-<%= complaint.status.toLowerCase().replace(' ','-') %>"><%= complaint.status %></span></div>
-                <div class="card-body">
-                    <div class="detail-meta">
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-hashtag"></i> ID</div><div class="meta-value"><span class="complaint-id"><%= complaint.complaint_id %></span></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-user-graduate"></i> Student</div><div class="meta-value"><strong><%= complaint.user_name %></strong></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-envelope"></i> Email</div><div class="meta-value" style="font-size:0.82rem"><%= complaint.user_email %></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-tag"></i> Category</div><div class="meta-value"><span class="category-badge"><%= complaint.category %></span></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-building"></i> Department</div><div class="meta-value"><%= complaint.department %></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-exclamation-triangle"></i> Priority</div><div class="meta-value"><span class="priority-badge priority-<%= complaint.priority.toLowerCase() %>"><%= complaint.priority %></span></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-calendar"></i> Submitted</div><div class="meta-value"><%= new Date(complaint.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) %></div></div>
-                        <div class="meta-item"><div class="meta-label"><i class="fas fa-clock"></i> Updated</div><div class="meta-value"><%= new Date(complaint.updated_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) %></div></div>
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div style="background: #FEE2E2; color: #DC2626; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <i class="fas fa-exclamation-circle" style="margin-right: 6px;"></i> <%= error %>
+    </div>
+    <% } %>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        
+        <div>
+            <!-- Ticket Info Header Card -->
+            <div class="table-card" style="padding: 2rem; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem;">
+                    <div>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary);"><%= complaint.complaint_id %></span>
+                        <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 0.25rem;"><%= complaint.title %></h2>
                     </div>
-                    <div class="detail-description"><h4><i class="fas fa-align-left"></i> Description</h4><p><%= complaint.description %></p></div>
-                    <% if (complaint.image_path) { %>
-                    <div class="detail-image"><h4><i class="fas fa-image"></i> Attached Image</h4><img src="<%= complaint.image_path %>" alt="Complaint" class="complaint-image" onclick="document.getElementById('lightbox').style.display='flex'" /></div>
+                    <span class="badge badge-<%= complaint.status.toLowerCase().replace(' ', '-') %>" style="font-size: 0.95rem; padding: 6px 16px;">
+                        <%= complaint.status %>
+                    </span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; background: var(--bg); padding: 1.25rem; border-radius: var(--radius-sm);">
+                    <div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block; text-transform: uppercase;">Resident Name</span>
+                        <strong style="color: var(--text-main);"><%= complaint.user_name %></strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block; text-transform: uppercase;">Resident Email / Mobile</span>
+                        <span style="color: var(--text-body); font-size: 0.85rem;"><%= complaint.user_email || 'N/A' %> &bull; <%= complaint.user_phone %></span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block; text-transform: uppercase;">Flat / Location</span>
+                        <strong style="color: var(--text-main);"><%= complaint.department %></strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; display: block; text-transform: uppercase;">Category</span>
+                        <span style="font-weight: 700;"><%= complaint.category %></span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.5rem;">Resident Issue Description</h4>
+                    <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-body); background: #FFFFFF; padding: 1rem; border: 1px solid var(--border-light); border-radius: var(--radius-sm);">
+                        <%= complaint.description %>
+                    </p>
+                </div>
+
+                <% if (complaint.image_path) { %>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.5rem;">Attached Photo Proof</h4>
+                    <img src="<%= complaint.image_path %>" alt="Attached Proof" style="max-height: 250px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); cursor: pointer;" onclick="window.open(this.src)" />
+                </div>
+                <% } %>
+            </div>
+
+            <!-- Update Ticket Status Form -->
+            <div class="table-card" style="padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.75rem;">
+                    <i class="fas fa-sync-alt" style="color: var(--primary); margin-right: 6px;"></i> Update Complaint Status
+                </h3>
+                <form action="/admin/complaints/<%= complaint.id %>/update-status" method="POST" id="statusForm">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;" class="form-grid">
+                        <div class="form-group">
+                            <label for="new_status">Select Status *</label>
+                            <select id="new_status" name="new_status" class="form-control" required>
+                                <% ['Pending','In Progress','Resolved','Rejected'].forEach(s => { %>
+                                <option value="<%= s %>" <%= complaint.status === s ? 'selected' : '' %>><%= s %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="remarks">Status Remarks for Resident</label>
+                            <input type="text" id="remarks" name="remarks" class="form-control" placeholder="e.g. Technician dispatched / Issue fixed successfully" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check-circle"></i> Save & Broadcast Status Change
+                    </button>
+                </form>
+            </div>
+
+            <!-- Assign Staff Form -->
+            <div class="table-card" style="padding: 2rem;">
+                <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.75rem;">
+                    <i class="fas fa-user-cog" style="color: var(--primary); margin-right: 6px;"></i> Assign Maintenance Staff & Official Notes
+                </h3>
+                <form action="/admin/complaints/<%= complaint.id %>/update-details" method="POST">
+                    <div class="form-group">
+                        <label for="assigned_to">Assigned Technician / Maintenance Vendor</label>
+                        <input type="text" id="assigned_to" name="assigned_to" class="form-control" value="<%= complaint.assigned_to || '' %>" placeholder="e.g. Senior Electrician Ramesh / Otis Lift Team" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="admin_remarks">Official Management Remarks</label>
+                        <textarea id="admin_remarks" name="admin_remarks" class="form-control" rows="3" placeholder="Official remarks visible to resident in details page..."><%= complaint.admin_remarks || '' %></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-save"></i> Save Staff Assignment & Remarks
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Audit Sidebar -->
+        <div>
+            <div class="table-card" style="padding: 1.5rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1.25rem;"><i class="fas fa-history" style="color: var(--primary); margin-right: 6px;"></i> Audit History</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-time"><%= new Date(complaint.created_at).toLocaleString('en-IN') %></div>
+                            <div class="timeline-title">Submitted by Resident</div>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;"><%= complaint.user_name %></p>
+                        </div>
+                    </div>
+
+                    <% if (updates && updates.length > 0) { %>
+                        <% updates.forEach(u => { %>
+                        <div class="timeline-item">
+                            <div class="timeline-dot" style="border-color: var(--secondary);"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-time"><%= new Date(u.updated_at).toLocaleString('en-IN') %></div>
+                                <div class="timeline-title">
+                                    <span class="badge badge-<%= (u.new_status || 'Pending').toLowerCase().replace(' ', '-') %>"><%= u.new_status %></span>
+                                </div>
+                                <% if (u.remarks) { %>
+                                <p style="font-size: 0.82rem; color: var(--text-body); margin-top: 4px;"><%= u.remarks %></p>
+                                <% } %>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px;">By <%= u.updated_by_name %></span>
+                            </div>
+                        </div>
+                        <% }) %>
                     <% } %>
                 </div>
             </div>
-
-            <div class="card admin-action-card">
-                <div class="card-header"><h3><i class="fas fa-exchange-alt"></i> Update Status</h3><span class="current-status-label">Current: <span class="status-badge status-<%= complaint.status.toLowerCase().replace(' ','-') %>"><%= complaint.status %></span></span></div>
-                <div class="card-body">
-                    <form action="/admin/complaints/<%= complaint.id %>/update-status" method="POST">
-                        <div class="form-row">
-                            <div class="form-group"><label for="new_status">New Status *</label>
-                                <select id="new_status" name="new_status" class="form-control" required><option value="" disabled selected>Select...</option>
-                                <% ['Pending','In Progress','Resolved','Rejected'].forEach(s=>{%><option value="<%= s %>" <%=complaint.status===s?'disabled':''%>><%= s %></option><%})%></select>
-                            </div>
-                            <div class="form-group"><label for="remarks">Remarks</label><input type="text" id="remarks" name="remarks" class="form-control" placeholder="Optional..." maxlength="500" /></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update Status</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><h3><i class="fas fa-user-tie"></i> Assign &amp; Remarks</h3></div>
-                <div class="card-body">
-                    <form action="/admin/complaints/<%= complaint.id %>/update-details" method="POST">
-                        <div class="form-group"><label for="assigned_to">Assign To</label><input type="text" id="assigned_to" name="assigned_to" class="form-control" value="<%= complaint.assigned_to || '' %>" placeholder="Staff name..." maxlength="100" /></div>
-                        <div class="form-group"><label for="admin_remarks">Official Admin Remarks</label><textarea id="admin_remarks" name="admin_remarks" class="form-control" rows="3" placeholder="Official response visible to student..." maxlength="1000"><%= complaint.admin_remarks || '' %></textarea></div>
-                        <button type="submit" class="btn btn-outline"><i class="fas fa-save"></i> Save Remarks</button>
-                    </form>
-                </div>
-            </div>
         </div>
 
-        <div class="detail-sidebar-col">
-            <div class="card">
-                <div class="card-header"><h3><i class="fas fa-history"></i> Update History</h3></div>
-                <div class="card-body">
-                    <div class="timeline">
-                        <div class="timeline-item"><div class="timeline-dot dot-submitted"></div><div class="timeline-content"><div class="timeline-status"><i class="fas fa-plus-circle" style="color:#8B5CF6"></i> Submitted</div><span class="timeline-date"><%= new Date(complaint.created_at).toLocaleString('en-IN') %></span><p>By: <%= complaint.user_name %></p></div></div>
-                        <% if (updates && updates.length > 0) { %>
-                        <%updates.forEach((u,i)=>{%>
-                        <div class="timeline-item <%=i===updates.length-1?'timeline-current':''%>">
-                            <div class="timeline-dot dot-<%=u.new_status?u.new_status.toLowerCase().replace(' ','-'):'pending'%>"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-status"><span class="status-badge status-<%=u.new_status?u.new_status.toLowerCase().replace(' ','-'):'pending'%>" style="font-size:0.62rem"><%=u.new_status||'Updated'%></span></div>
-                                <span class="timeline-date"><%=new Date(u.updated_at).toLocaleString('en-IN')%></span>
-                                <%if(u.remarks){%><div class="timeline-remarks"><%=u.remarks%></div><%}%>
-                            </div>
-                        </div>
-                        <%})%>
-                        <% } else { %>
-                        <div class="timeline-item"><div class="timeline-dot dot-pending"></div><div class="timeline-content"><div class="timeline-status">Awaiting Action</div><span class="timeline-date">No updates yet</span></div></div>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-<% if (complaint.image_path) { %><div class="lightbox" id="lightbox" style="display:none" onclick="this.style.display='none'"><img src="<%= complaint.image_path %>" alt="Complaint" /></div><% } %>
+
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
 </body>
 </html>

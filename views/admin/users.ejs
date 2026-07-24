@@ -3,51 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Students — Admin CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Resident Directory – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="dashboard-body">
+
 <%- include('../partials/admin-sidebar', { activePage: 'users' }) %>
+
 <div class="main-content" id="mainContent">
     <div class="topbar">
         <div class="topbar-left">
-            <div class="breadcrumb"><span>Admin</span><i class="fas fa-chevron-right"></i><span>Students</span></div>
-            <h1><i class="fas fa-users"></i> Student Management</h1>
+            <h1><i class="fas fa-users" style="color: var(--secondary);"></i> Resident Directory</h1>
+            <p>View registered apartment owners and residents across all towers</p>
+        </div>
+        <div class="topbar-right">
+            <input type="text" id="tableSearch" class="form-control" placeholder="Quick Search Resident..." style="width: 240px;" />
         </div>
     </div>
-    <div class="card">
-        <div class="card-header"><h3><i class="fas fa-user-friends"></i> Registered Students (<%= users.length %>)</h3></div>
-        <div class="card-body" style="padding:0">
-            <% if (users.length === 0) { %><div class="empty-state"><i class="fas fa-users"></i><h4>No students registered</h4></div>
-            <% } else { %>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead><tr><th>#</th><th>Student</th><th>Phone</th><th>Complaints</th><th>Registered</th></tr></thead>
-                    <tbody>
-                        <% users.forEach((u,i) => { %>
-                        <tr>
-                            <td style="color:var(--text-muted);font-size:0.8rem"><%= i+1 %></td>
-                            <td>
-                                <div style="display:flex;align-items:center;gap:0.65rem">
-                                    <div class="user-avatar-sm"><%= u.full_name.charAt(0).toUpperCase() %></div>
-                                    <div class="user-cell"><strong><%= u.full_name %></strong><small><%= u.email %></small></div>
-                                </div>
-                            </td>
-                            <td style="color:var(--text-muted);font-size:0.85rem"><%= u.phone || '—' %></td>
-                            <td><span class="complaint-count-badge"><i class="fas fa-folder"></i> <%= u.complaint_count %></span></td>
-                            <td style="color:var(--text-muted);font-size:0.78rem"><%= new Date(u.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) %></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-            <% } %>
+
+    <!-- Directory Table -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3><i class="fas fa-id-badge" style="color: var(--primary); margin-right: 8px;"></i> Registered Residents (<%= users.length %>)</h3>
         </div>
+
+        <% if (users.length === 0) { %>
+        <div style="padding: 3rem; text-align: center; color: var(--text-muted);">
+            <i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 1rem; color: var(--border-light);"></i>
+            <h4>No residents registered yet</h4>
+        </div>
+        <% } else { %>
+        <div style="overflow-x: auto;">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Resident & Flat Details</th>
+                        <th>Email Address</th>
+                        <th>Mobile Number</th>
+                        <th>Total Requests</th>
+                        <th>Registration Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach((u, i) => { %>
+                    <tr>
+                        <td style="color: var(--text-muted); font-size: 0.85rem;"><%= i + 1 %></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div class="sidebar-avatar" style="width: 36px; height: 36px; font-size: 0.95rem;">
+                                    <%= u.full_name.charAt(0).toUpperCase() %>
+                                </div>
+                                <strong style="color: var(--text-main); font-size: 0.95rem;"><%= u.full_name %></strong>
+                            </div>
+                        </td>
+                        <td><%= u.email %></td>
+                        <td><%= u.phone || 'Not Provided' %></td>
+                        <td>
+                            <span class="badge" style="background: var(--primary-light); color: var(--primary); font-weight: 700;">
+                                <i class="fas fa-ticket-alt"></i> <%= u.complaint_count %> Requests
+                            </span>
+                        </td>
+                        <td><%= new Date(u.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
     </div>
 </div>
+
+<script src="/js/main.js"></script>
 <script src="/js/admin.js"></script>
 </body>
 </html>

@@ -1,20 +1,21 @@
+<!-- views/partials/sidebar.ejs -->
 <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-        <div class="sidebar-logo-icon"><i class="fas fa-graduation-cap"></i></div>
-        <div class="sidebar-logo-text"><strong>Vignan VITS</strong><span>Complaint Portal</span></div>
+        <div class="sidebar-logo-icon"><i class="fas fa-building"></i></div>
+        <div class="sidebar-logo-text"><strong>Skyline Residency</strong><span>Resident Portal</span></div>
     </div>
     <div class="sidebar-profile">
-        <div class="sidebar-avatar"><i class="fas fa-user"></i></div>
-        <div class="sidebar-user"><h4><%= user.full_name %></h4><span>Student</span></div>
+        <div class="sidebar-avatar"><i class="fas fa-user-circle"></i></div>
+        <div class="sidebar-user"><h4><%= user.full_name %></h4><span>Resident</span></div>
     </div>
     <div class="sidebar-nav">
-        <div class="sidebar-section-label">Main Menu</div>
-        <a href="/dashboard" class="sidebar-link <%= activePage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="/complaints/new" class="sidebar-link <%= activePage === 'new-complaint' ? 'active' : '' %>"><i class="fas fa-plus-circle"></i> New Complaint</a>
-        <a href="/complaints" class="sidebar-link <%= activePage === 'my-complaints' ? 'active' : '' %>"><i class="fas fa-folder-open"></i> My Complaints</a>
-        <div class="sidebar-section-label" style="margin-top:0.75rem">Account</div>
-        <a href="/profile" class="sidebar-link <%= activePage === 'profile' ? 'active' : '' %>"><i class="fas fa-user-circle"></i> Profile</a>
+        <div class="sidebar-section-label">Resident Menu</div>
+        <a href="/dashboard" class="sidebar-link <%= activePage === 'dashboard' ? 'active' : '' %>"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="/complaints/new" class="sidebar-link <%= activePage === 'new-complaint' ? 'active' : '' %>"><i class="fas fa-plus-circle"></i> Register Complaint</a>
+        <a href="/complaints" class="sidebar-link <%= activePage === 'my-complaints' ? 'active' : '' %>"><i class="fas fa-tasks"></i> Track Complaints</a>
+        <div class="sidebar-section-label" style="margin-top:1rem">My Account</div>
+        <a href="/profile" class="sidebar-link <%= activePage === 'profile' ? 'active' : '' %>"><i class="fas fa-id-card"></i> Resident Profile</a>
     </div>
     <div class="sidebar-footer">
         <a href="/logout" class="sidebar-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a>

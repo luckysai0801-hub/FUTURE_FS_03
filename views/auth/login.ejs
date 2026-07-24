@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Vignan CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Resident Sign In – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/auth.css">
@@ -12,65 +12,65 @@
 <body class="auth-body">
 <div class="auth-container">
     <div class="auth-left">
-        <div class="auth-brand"><i class="fas fa-graduation-cap"></i> Vignan VITS</div>
-        <h1>Student Complaint Portal</h1>
-        <p>Easily submit and track your complaints. Our team is committed to resolving issues promptly.</p>
-        <div class="auth-features">
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Submit complaints in under 2 minutes</div>
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Real-time status tracking</div>
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Direct admin communication</div>
-            <div class="auth-feature"><i class="fas fa-check-circle"></i> Complete complaint history</div>
+        <div class="auth-brand"><i class="fas fa-building"></i> Skyline Residency</div>
+        <div>
+            <h1>Smart Apartment Portal</h1>
+            <p>Welcome back! Sign in to submit maintenance requests, track complaint status in real-time, and access community services.</p>
+            <div class="auth-features">
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> 24/7 Digital Maintenance Desk</div>
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Live Status Timeline & Staff Notes</div>
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Image Uploads & Photo Proof</div>
+                <div class="auth-feature"><i class="fas fa-check-circle"></i> Emergency Society Contact Registry</div>
+            </div>
         </div>
-        <div class="auth-stats">
-            <div class="auth-stat"><strong>500+</strong><span>Students</span></div>
-            <div class="auth-stat"><strong>98%</strong><span>Resolved</span></div>
-            <div class="auth-stat"><strong>24h</strong><span>Response</span></div>
-        </div>
-        <i class="fas fa-university auth-illustration"></i>
+        <p style="font-size: 0.8rem; opacity: 0.7; margin: 0;">&copy; Skyline Residency Management Committee</p>
     </div>
+    
     <div class="auth-right">
         <div class="auth-form-container">
             <div class="auth-header">
-                <h2>Welcome back 👋</h2>
-                <p>Sign in to your student account</p>
+                <h2>Resident Sign In</h2>
+                <p>Enter your apartment registered email and password</p>
             </div>
+            
             <% if (typeof error !== 'undefined' && error) { %>
-            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+            <div style="background: #FEE2E2; color: #DC2626; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.88rem; margin-bottom: 1.25rem;">
+                <i class="fas fa-exclamation-circle"></i> <%= error %>
+            </div>
             <% } %>
             <% if (typeof success !== 'undefined' && success) { %>
-            <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success %></div>
+            <div style="background: #D1FAE5; color: #059669; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.88rem; margin-bottom: 1.25rem;">
+                <i class="fas fa-check-circle"></i> <%= success %>
+            </div>
             <% } %>
+
             <form action="/login" method="POST" id="loginForm">
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <div class="input-group">
-                        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted)"><i class="fas fa-envelope"></i></span>
-                        <input type="email" id="email" name="email" class="form-control" style="padding-left:2.5rem" required placeholder="you@student.vignan.ac.in" />
-                    </div>
+                    <input type="email" id="email" name="email" class="form-control" required placeholder="rahul.sharma@skylineresidency.com" />
                 </div>
+                
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <div class="input-group">
-                        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted)"><i class="fas fa-lock"></i></span>
-                        <input type="password" id="password" name="password" class="form-control" style="padding-left:2.5rem" required placeholder="Your password" />
-                        <button type="button" class="toggle-password" onclick="togglePwd('password','eye1')"><i class="fas fa-eye" id="eye1"></i></button>
-                    </div>
+                    <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••" />
                 </div>
-                <button type="submit" class="btn btn-primary btn-full btn-lg" id="submitBtn">
-                    <i class="fas fa-sign-in-alt"></i> Sign In
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;" id="submitBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In to Resident Portal
                 </button>
             </form>
-            <div class="auth-footer" style="margin-top:1.25rem">
-                Don't have an account? <a href="/register">Register here</a>
+            
+            <div class="auth-footer">
+                New Resident? <a href="/register">Create an Account</a>
             </div>
-            <div class="auth-divider">Admin?</div>
-            <a href="/admin/login" class="btn btn-outline btn-full" style="font-size:0.82rem"><i class="fas fa-shield-alt"></i> Admin Login Portal</a>
+            
+            <div style="text-align: center; margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1.25rem;">
+                <a href="/admin/login" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+                    <i class="fas fa-user-shield" style="color: var(--primary);"></i> Society Manager / Admin Login
+                </a>
+            </div>
         </div>
     </div>
 </div>
-<script>
-function togglePwd(id,iconId){const f=document.getElementById(id),i=document.getElementById(iconId);f.type=f.type==='password'?(i.classList.replace('fa-eye','fa-eye-slash'),'text'):(i.classList.replace('fa-eye-slash','fa-eye'),'password');}
-document.getElementById('loginForm').onsubmit=function(){const b=document.getElementById('submitBtn');b.innerHTML='<i class="fas fa-spinner fa-spin"></i> Signing In...';b.disabled=true;};
-</script>
 </body>
 </html>

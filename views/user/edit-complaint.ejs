@@ -3,80 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Complaint — CMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Edit Complaint – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/complaints.css">
 </head>
 <body class="dashboard-body">
+
 <%- include('../partials/sidebar', { activePage: 'my-complaints' }) %>
+
 <div class="main-content" id="mainContent">
     <div class="topbar">
         <div class="topbar-left">
-            <div class="breadcrumb"><a href="/dashboard">Dashboard</a><i class="fas fa-chevron-right"></i><a href="/complaints">My Complaints</a><i class="fas fa-chevron-right"></i><span>Edit</span></div>
-            <h1><i class="fas fa-edit"></i> Edit Complaint</h1>
-            <p>ID: <span class="complaint-id"><%= complaint.complaint_id %></span></p>
+            <h1><i class="fas fa-edit" style="color: var(--primary);"></i> Edit Complaint: <%= complaint.complaint_id %></h1>
+            <p>Update pending maintenance request details before management review</p>
         </div>
-        <a href="/complaints/<%= complaint.id %>" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+        <div class="topbar-right">
+            <a href="/complaints/<%= complaint.id %>" class="btn btn-light"><i class="fas fa-arrow-left"></i> Cancel & Back</a>
+        </div>
     </div>
 
-    <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error fade-in"><i class="fas fa-exclamation-circle"></i> <%= error %><button class="alert-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button></div><% } %>
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div style="background: #FEE2E2; color: #DC2626; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <i class="fas fa-exclamation-circle" style="margin-right: 6px;"></i> <%= error %>
+    </div>
+    <% } %>
 
-    <div class="card form-card">
-        <div class="card-header"><h3><i class="fas fa-pencil-alt"></i> Update Complaint Details</h3><span class="status-badge status-pending">Pending</span></div>
+    <div class="form-card">
         <div class="card-body">
-            <form action="/complaints/<%= complaint.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <form action="/complaints/<%= complaint.id %>/update" method="POST" enctype="multipart/form-data" id="complaintForm">
+                
                 <div class="form-group">
                     <label for="title">Complaint Title *</label>
                     <input type="text" id="title" name="title" class="form-control" value="<%= complaint.title %>" required maxlength="150" />
                 </div>
-                <div class="form-row">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;" class="form-grid">
                     <div class="form-group">
-                        <label for="category">Category *</label>
+                        <label for="category">Maintenance Category *</label>
                         <select id="category" name="category" class="form-control" required>
-                            <% ['Infrastructure','Academic','Hostel','Library','Transport','Canteen','IT / Network','Electrical','Sanitation','Sports','Administrative','Other'].forEach(cat => { %>
+                            <% [
+                                'Water Leakage',
+                                'Electrical Issue',
+                                'Lift Problem',
+                                'Parking Issue',
+                                'Security Complaint',
+                                'Housekeeping',
+                                'Garbage Collection',
+                                'Water Supply',
+                                'Plumbing',
+                                'Garden Maintenance',
+                                'Street Lighting',
+                                'Other'
+                            ].forEach(cat => { %>
                             <option value="<%= cat %>" <%= complaint.category === cat ? 'selected' : '' %>><%= cat %></option>
                             <% }) %>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="department">Department *</label>
-                        <select id="department" name="department" class="form-control" required>
-                            <% [['CSE','Computer Science (CSE)'],['ECE','Electronics & Comm (ECE)'],['EEE','Electrical Engg (EEE)'],['MECH','Mechanical Engg (MECH)'],['CIVIL','Civil Engg (CIVIL)'],['IT','Information Technology (IT)'],['MBA','MBA'],['MCA','MCA'],['General','General / All Departments'],['Admin Office','Admin Office'],['Hostel','Hostel'],['Library','Library']].forEach(dep => { %>
-                            <option value="<%= dep[0] %>" <%= complaint.department === dep[0] ? 'selected' : '' %>><%= dep[1] %></option>
-                            <% }) %>
-                        </select>
+                        <label for="department">Flat / Location *</label>
+                        <input type="text" id="department" name="department" class="form-control" value="<%= complaint.department %>" required />
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Priority Level *</label>
                     <div class="priority-options">
-                        <label class="priority-option priority-low-opt"><input type="radio" name="priority" value="Low" <%= complaint.priority==='Low'?'checked':'' %> required /><span><i class="fas fa-arrow-down"></i> Low</span></label>
-                        <label class="priority-option priority-medium-opt"><input type="radio" name="priority" value="Medium" <%= complaint.priority==='Medium'?'checked':'' %> /><span><i class="fas fa-minus"></i> Medium</span></label>
-                        <label class="priority-option priority-high-opt"><input type="radio" name="priority" value="High" <%= complaint.priority==='High'?'checked':'' %> /><span><i class="fas fa-arrow-up"></i> High</span></label>
+                        <label class="priority-option priority-low-opt">
+                            <input type="radio" name="priority" value="Low" <%= complaint.priority === 'Low' ? 'checked' : '' %> required />
+                            <span><i class="fas fa-arrow-down"></i> Low Priority</span>
+                        </label>
+                        <label class="priority-option priority-medium-opt">
+                            <input type="radio" name="priority" value="Medium" <%= complaint.priority === 'Medium' ? 'checked' : '' %> />
+                            <span><i class="fas fa-minus"></i> Medium Priority</span>
+                        </label>
+                        <label class="priority-option priority-high-opt">
+                            <input type="radio" name="priority" value="High" <%= complaint.priority === 'High' ? 'checked' : '' %> />
+                            <span><i class="fas fa-arrow-up"></i> High Priority</span>
+                        </label>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="description">Description *</label>
-                    <textarea id="description" name="description" class="form-control" rows="5" required minlength="20" maxlength="2000"><%= complaint.description %></textarea>
+                    <label for="description">Detailed Complaint Description *</label>
+                    <textarea id="description" name="description" class="form-control" rows="5" required minlength="15" maxlength="2000"><%= complaint.description %></textarea>
                 </div>
+
                 <div class="form-group">
-                    <label>Update Image <span class="optional">(Leave blank to keep current)</span></label>
+                    <label>Attach New Photo <span style="color: var(--text-muted); font-weight: normal;">(Leave empty to keep existing photo)</span></label>
                     <% if (complaint.image_path) { %>
-                    <div class="current-image"><p><i class="fas fa-image"></i> Current Image</p><img src="<%= complaint.image_path %>" alt="Current" style="max-height:100px;border-radius:8px;border:1px solid var(--border)" /></div>
+                    <div style="margin-bottom: 0.75rem;">
+                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Existing Image:</span>
+                        <img src="<%= complaint.image_path %>" alt="Existing Image" style="max-height: 120px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);" />
+                    </div>
                     <% } %>
-                    <div class="file-upload-area"><input type="file" name="image" accept="image/*" class="file-input" /><div class="file-upload-label"><i class="fas fa-cloud-upload-alt"></i><p>Click to replace image</p><span>Max 5MB</span></div></div>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="image" name="image" accept="image/*" class="file-input" />
+                        <div class="file-upload-label" id="fileLabel">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to replace image</p>
+                            <span>Supports JPG, PNG, WEBP (Max 5MB)</span>
+                        </div>
+                        <img id="imagePreview" class="image-preview" style="display:none" alt="New Image Preview" />
+                    </div>
                 </div>
-                <div class="form-actions">
-                    <a href="/complaints/<%= complaint.id %>" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
-                    <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save"></i> Save Changes</button>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <a href="/complaints/<%= complaint.id %>" class="btn btn-light"><i class="fas fa-times"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Save Complaint Updates
+                    </button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
+<script src="/js/main.js"></script>
 <script src="/js/complaints.js"></script>
 </body>
 </html>

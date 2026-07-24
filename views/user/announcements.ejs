@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society Announcements – Skyline Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="background: var(--bg); min-height: 100vh; display: flex; flex-direction: column;">
+
+<%- include('../partials/navbar') %>
+
+<div class="container" style="padding: 3rem 1.5rem; flex: 1;">
+    
+    <div style="margin-bottom: 2.5rem; text-align: center;">
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
+            <i class="fas fa-bullhorn" style="color: var(--primary); margin-right: 8px;"></i> Society Notice Board & Announcements
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto;">
+            Official announcements, maintenance schedules, water tank cleaning alerts, and meeting notices from Skyline Residency Management.
+        </p>
+    </div>
+
+    <% if (announcements.length === 0) { %>
+    <div class="table-card" style="padding: 4rem 2rem; text-align: center; color: var(--text-muted); max-width: 700px; margin: 0 auto;">
+        <i class="fas fa-bullhorn" style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--border-light);"></i>
+        <h3>No active announcements at this time</h3>
+        <p>Check back later for community notices and maintenance updates.</p>
+    </div>
+    <% } else { %>
+    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
+        <% announcements.forEach(a => { %>
+        <div class="table-card" style="padding: 2rem; background: #FFFFFF; border-left: 5px solid <%= a.priority === 'High' ? '#EF4444' : (a.priority === 'Medium' ? '#3B82F6' : '#10B981') %>;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                <div>
+                    <span class="badge" style="background: var(--primary-light); color: var(--primary); font-size: 0.8rem; text-transform: uppercase;">
+                        <i class="fas fa-tag"></i> <%= a.category %>
+                    </span>
+                    <h2 style="font-size: 1.35rem; font-weight: 800; margin-top: 0.5rem; color: var(--text-main);"><%= a.title %></h2>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg); padding: 4px 12px; border-radius: 20px;">
+                    <i class="fas fa-clock"></i> <%= new Date(a.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+                </span>
+            </div>
+
+            <p style="font-size: 1rem; line-height: 1.7; color: var(--text-body); margin-bottom: 1.25rem; white-space: pre-line;">
+                <%= a.content %>
+            </p>
+
+            <div style="font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 0.75rem; display: flex; justify-content: space-between;">
+                <span><i class="fas fa-user-shield"></i> Posted by <%= a.author_name || 'Society Management Office' %></span>
+                <span>Skyline Residency Facilities Committee</span>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+    <% } %>
+
+</div>
+
+<%- include('../partials/footer') %>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

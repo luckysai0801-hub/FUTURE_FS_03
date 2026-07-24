@@ -1,42 +1,45 @@
 // =============================================
-// main.js - Shared JavaScript
-// Navbar toggle, sidebar toggle, auto-dismiss alerts
+// main.js - Shared UI Script
+// Skyline Residency – Smart Apartment Portal
 // =============================================
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ---- NAVBAR MOBILE TOGGLE ----
+    // Mobile Navbar Toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     if (navToggle && navLinks) {
         navToggle.addEventListener('click', () => {
             navLinks.classList.toggle('open');
             const icon = navToggle.querySelector('i');
-            if (navLinks.classList.contains('open')) {
-                icon.classList.replace('fa-bars', 'fa-times');
-            } else {
-                icon.classList.replace('fa-times', 'fa-bars');
+            if (icon) {
+                if (navLinks.classList.contains('open')) {
+                    icon.classList.replace('fa-bars', 'fa-times');
+                } else {
+                    icon.classList.replace('fa-times', 'fa-bars');
+                }
             }
         });
-        // Close nav on outside click
+
         document.addEventListener('click', (e) => {
             if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
                 navLinks.classList.remove('open');
+                const icon = navToggle.querySelector('i');
+                if (icon) icon.classList.replace('fa-times', 'fa-bars');
             }
         });
     }
 
-    // ---- SIDEBAR TOGGLE (Dashboard) ----
+    // Sidebar Toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('open');
         });
-        // Close sidebar on outside click (mobile)
+
         document.addEventListener('click', (e) => {
-            if (window.innerWidth < 769) {
+            if (window.innerWidth < 992) {
                 if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
                     sidebar.classList.remove('open');
                 }
@@ -44,23 +47,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ---- AUTO DISMISS ALERTS ----
+    // Auto-dismiss Alerts
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
             alert.style.opacity = '0';
-            alert.style.transform = 'translateY(-8px)';
+            alert.style.transform = 'translateY(-6px)';
             alert.style.transition = 'all 0.3s ease';
             setTimeout(() => alert.remove(), 300);
-        }, 5000); // Auto-dismiss after 5 seconds
+        }, 5000);
     });
 
-    // ---- NAVBAR SCROLL EFFECT ----
+    // Sticky Navbar shadow on scroll
     const navbar = document.getElementById('mainNav');
     if (navbar) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+            if (window.scrollY > 40) {
+                navbar.style.boxShadow = '0 8px 30px rgba(15, 23, 42, 0.08)';
             } else {
                 navbar.style.boxShadow = '';
             }
