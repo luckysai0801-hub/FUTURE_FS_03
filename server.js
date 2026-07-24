@@ -1,6 +1,7 @@
 // =============================================
 // server.js - Main Entry Point
 // Skyline Residency – Smart Apartment Complaint & Maintenance Portal
+// Decoupled Client-Server Architecture (Pure HTML/CSS/JS + Express REST APIs)
 // =============================================
 
 const express = require('express');
@@ -9,10 +10,12 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
-// Import routes
+// Import API routes
 const authRoutes = require('./routes/authRoutes');
 const complaintRoutes = require('./routes/complaintRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const { isAdmin } = require('./middleware/roleMiddleware');
+const adminController = require('./controllers/adminController');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,12 +26,9 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// View Engine - EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -44,44 +44,73 @@ app.use(session({
     }
 }));
 
-// Global template variables
-app.use((req, res, next) => {
-    res.locals.user = req.session.user || null;
-    res.locals.success = req.session.success || null;
-    res.locals.error = req.session.error || null;
+// REST API Endpoints
+app.use('/api/auth', authRoutes);
+app.use('/api', complaintRoutes);
+app.use('/api/admin', adminRoutes);
 
-    delete req.session.success;
-    delete req.session.error;
+// Direct CSV Download routes
+app.get('/admin/export/csv', isAdmin, adminController.exportCSV);
+app.get('/api/admin/export/csv', isAdmin, adminController.exportCSV);
 
-    next();
-});
-
-// Home - Landing Page
+// Static Page Routes
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Skyline Residency – Smart Apartment Portal' });
+    res.sendFile(path.join(__dirname, 'pages/index.html'));
 });
 
-// Public Complaint & Tracking routes
-app.use('/', complaintRoutes);
+app.get('/complaints/new', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/complaint.html'));
+});
 
-// Auth routes (Admin login, logout)
-app.use('/', authRoutes);
+app.get('/track', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/track.html'));
+});
 
-// Admin routes (prefixed with /admin)
-app.use('/admin', adminRoutes);
+app.get('/announcements', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/announcements.html'));
+});
+
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/contact.html'));
+});
+
+app.get('/admin/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/admin-login.html'));
+});
+
+app.get('/admin/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/dashboard.html'));
+});
+
+app.get('/admin/complaints', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/admin-complaints.html'));
+});
+
+app.get('/admin/announcements', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/admin-announcements.html'));
+});
+
+app.get('/admin/users', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/admin-users.html'));
+});
+
+app.get('/admin/reports', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages/admin-reports.html'));
+});
+
+// Alias routes
+app.get('/complaints', (req, res) => res.redirect('/track'));
+app.get('/admin', (req, res) => res.redirect('/admin/dashboard'));
 
 // 404 Handler
 app.use((req, res) => {
-    res.status(404).render('404', { title: 'Page Not Found' });
+    res.status(404).sendFile(path.join(__dirname, 'pages/404.html'));
 });
 
 // Global Error Handler
 app.use((err, req, res, next) => {
     console.error('❌ Unhandled Error:', err.stack);
-    res.status(500).render('404', {
-        title: 'Server Error',
-        message: err.message || 'Something went wrong!'
-    });
+    res.status(500).sendFile(path.join(__dirname, 'pages/404.html'));
 });
 
 // Start Server
@@ -95,8 +124,8 @@ app.listen(PORT, () => {
     console.log('');
     console.log('📌 Available URLs:');
     console.log(`   🏠  Home               : http://localhost:${PORT}/`);
-    console.log(`   📝  Register Complaint : http://localhost:${PORT}/complaints/new`);
-    console.log(`   🔍  Track Complaint    : http://localhost:${PORT}/track`);
-    console.log(`   🛡️  Admin Login        : http://localhost:${PORT}/admin/login`);
+    console.log(`   📝  Register Complaint : http://localhost:${PORT}/complaint.html`);
+    console.log(`   🔍  Track Complaint    : http://localhost:${PORT}/track.html`);
+    console.log(`   🛡️  Admin Login        : http://localhost:${PORT}/admin-login.html`);
     console.log('');
 });

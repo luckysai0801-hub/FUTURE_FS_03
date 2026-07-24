@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Apartment Complaints – Skyline Residency</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/complaints.css">
+</head>
+<body class="admin-body">
+
+<!-- Dynamic Navbar Container -->
+<div id="app-navbar"></div>
+
+<div class="admin-layout">
+    
+    <!-- Dynamic Admin Sidebar Container -->
+    <div id="app-admin-sidebar"></div>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+        
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 1.8rem; color: var(--primary);">Manage Apartment Complaints</h1>
+                <p style="color: var(--text-muted); margin: 0;">Review, filter, inspect, and update residential maintenance tickets.</p>
+            </div>
+            <a href="/api/admin/export/csv" class="btn btn-sm btn-outline-primary" target="_blank">
+                <i class="fas fa-file-csv"></i> Download CSV Report
+            </a>
+        </div>
+
+        <!-- Filter Bar Card -->
+        <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.25rem; margin-bottom: 1.5rem;">
+            <form id="complaintsFilterForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; align-items: flex-end;">
+                
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Search Keyword</label>
+                    <input type="text" id="filterSearch" class="form-control" placeholder="ID, Name, Title, Mobile...">
+                </div>
+
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Status</label>
+                    <select id="filterStatus" class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Category</label>
+                    <select id="filterCategory" class="form-control">
+                        <option value="">All Categories</option>
+                        <option value="Water Leakage">Water Leakage</option>
+                        <option value="Electrical Issue">Electrical Issue</option>
+                        <option value="Lift Problem">Lift Problem</option>
+                        <option value="Parking Issue">Parking Issue</option>
+                        <option value="Security Complaint">Security Complaint</option>
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Garbage Collection">Garbage Collection</option>
+                        <option value="Water Supply">Water Supply</option>
+                        <option value="Plumbing">Plumbing</option>
+                        <option value="Garden Maintenance">Garden Maintenance</option>
+                        <option value="Street Lighting">Street Lighting</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">Priority</label>
+                    <select id="filterPriority" class="form-control">
+                        <option value="">All Priorities</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <button type="button" id="resetFilterBtn" class="btn btn-outline-secondary">
+                        <i class="fas fa-rotate-left"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Complaints Table Card -->
+        <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span id="recordCountBadge" style="font-weight: 600; color: var(--primary);">Showing 0 Complaints</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg); text-align: left;">
+                            <th style="padding: 0.75rem;">Complaint ID</th>
+                            <th style="padding: 0.75rem;">Resident & Mobile</th>
+                            <th style="padding: 0.75rem;">Tower / Location</th>
+                            <th style="padding: 0.75rem;">Issue Title & Category</th>
+                            <th style="padding: 0.75rem;">Priority</th>
+                            <th style="padding: 0.75rem;">Status</th>
+                            <th style="padding: 0.75rem;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complaintsTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading complaints data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Dynamic Footer Container -->
+<div id="app-footer"></div>
+
+<!-- Client Scripts -->
+<script src="/js/components.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

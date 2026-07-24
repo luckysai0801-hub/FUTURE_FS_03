@@ -1,6 +1,6 @@
 // =============================================
 // controllers/adminController.js
-// Handles all Society Manager Admin Panel operations
+// Handles all Society Manager Admin Panel REST API operations
 // Skyline Residency – Smart Apartment Portal
 // =============================================
 
@@ -8,7 +8,7 @@ const db = require('../config/db');
 
 // ---- ADMIN DASHBOARD ----
 
-// GET /admin/dashboard
+// GET /api/admin/dashboard
 exports.dashboard = async (req, res) => {
     try {
         // Get overall complaint statistics
@@ -55,8 +55,8 @@ exports.dashboard = async (req, res) => {
             ORDER BY count DESC
         `);
 
-        res.render('admin/dashboard', {
-            title: 'Society Manager Dashboard – Skyline Residency',
+        return res.json({
+            success: true,
             stats: { 
                 ...stats[0], 
                 totalUsers: userCount[0].total || 0,
@@ -69,8 +69,9 @@ exports.dashboard = async (req, res) => {
         });
     } catch (error) {
         console.error('Admin Dashboard Error:', error);
-        res.render('admin/dashboard', {
-            title: 'Society Manager Dashboard',
+        return res.status(500).json({
+            success: false,
+            error: 'Failed to fetch admin dashboard statistics.',
             stats: { total: 0, pending: 0, in_progress: 0, resolved: 0, rejected: 0, totalUsers: 0, maintenanceRequests: 0, announcementsCount: 0 },
             recentComplaints: [],
             byCategory: [],
@@ -81,7 +82,7 @@ exports.dashboard = async (req, res) => {
 
 // ---- MANAGE COMPLAINTS ----
 
-// GET /admin/complaints
+// GET /api/admin/complaints
 exports.listComplaints = async (req, res) => {
     try {
         const { search, status, category, department, priority } = req.query;
@@ -118,18 +119,18 @@ exports.listComplaints = async (req, res) => {
 
         const [complaints] = await db.query(query, params);
 
-        res.render('admin/complaints', {
-            title: 'Manage Apartment Complaints – Skyline Residency',
+        return res.json({
+            success: true,
             complaints,
-            filters: { search, status, category, department, priority }
+            filters: { search: search || '', status: status || '', category: category || '', department: department || '', priority: priority || '' }
         });
     } catch (error) {
-        console.error('Admin Complaints Error:', error);
-        res.render('admin/complaints', { title: 'Manage Complaints', complaints: [], filters: {} });
+        console.error('Admin Complaints List Error:', error);
+        return res.status(500).json({ success: false, error: 'Failed to fetch complaints list.', complaints: [] });
     }
 };
 
-// GET /admin/complaints/:id
+// GET /api/admin/complaints/:id
 exports.complaintDetail = async (req, res) => {
     try {
         const [complaints] = await db.query(`
@@ -139,8 +140,7 @@ exports.complaintDetail = async (req, res) => {
         `, [req.params.id]);
 
         if (complaints.length === 0) {
-            req.session.error = 'Complaint record not found.';
-            return res.redirect('/admin/complaints');
+            return res.status(404).json({ success: false, error: 'Complaint record not found.' });
         }
 
         // Get audit updates history
@@ -152,30 +152,32 @@ exports.complaintDetail = async (req, res) => {
             ORDER BY cu.updated_at DESC
         `, [req.params.id]);
 
-        res.render('admin/complaint-detail', {
-            title: 'Inspection & Resolution – Skyline Residency',
+        return res.json({
+            success: true,
             complaint: complaints[0],
             updates
         });
     } catch (error) {
         console.error('Admin Complaint Detail Error:', error);
-        req.session.error = 'Error loading complaint record.';
-        res.redirect('/admin/complaints');
+        return res.status(500).json({ success: false, error: 'Error loading complaint record details.' });
     }
 };
 
-// POST /admin/complaints/:id/update-status
+// POST /api/admin/complaints/:id/status
 exports.updateStatus = async (req, res) => {
     try {
         const { new_status, remarks } = req.body;
         const complaintId = req.params.id;
         const adminId = req.session.user.id;
 
+        if (!new_status) {
+            return res.status(400).json({ success: false, error: 'Target status is required.' });
+        }
+
         const [complaints] = await db.query('SELECT status FROM complaints WHERE id = ?', [complaintId]);
 
         if (complaints.length === 0) {
-            req.session.error = 'Complaint not found.';
-            return res.redirect('/admin/complaints');
+            return res.status(404).json({ success: false, error: 'Complaint not found.' });
         }
 
         const oldStatus = complaints[0].status;
@@ -192,17 +194,18 @@ exports.updateStatus = async (req, res) => {
             VALUES (?, ?, ?, ?, ?)
         `, [complaintId, adminId, oldStatus, new_status, remarks || null]);
 
-        req.session.success = `Maintenance ticket status updated to "${new_status}" successfully!`;
-        res.redirect('/admin/complaints/' + complaintId);
+        return res.json({
+            success: true,
+            message: `Maintenance ticket status updated to "${new_status}" successfully!`
+        });
 
     } catch (error) {
         console.error('Update Status Error:', error);
-        req.session.error = 'Failed to update ticket status.';
-        res.redirect('/admin/complaints/' + req.params.id);
+        return res.status(500).json({ success: false, error: 'Failed to update ticket status.' });
     }
 };
 
-// POST /admin/complaints/:id/update-details
+// POST /api/admin/complaints/:id/details
 exports.updateDetails = async (req, res) => {
     try {
         const { assigned_to, admin_remarks } = req.body;
@@ -213,35 +216,37 @@ exports.updateDetails = async (req, res) => {
             [assigned_to || null, admin_remarks || null, complaintId]
         );
 
-        req.session.success = 'Maintenance team assignment & notes saved!';
-        res.redirect('/admin/complaints/' + complaintId);
+        return res.json({
+            success: true,
+            message: 'Maintenance team assignment & notes saved successfully!'
+        });
 
     } catch (error) {
         console.error('Update Details Error:', error);
-        req.session.error = 'Failed to update details.';
-        res.redirect('/admin/complaints/' + req.params.id);
+        return res.status(500).json({ success: false, error: 'Failed to update ticket details.' });
     }
 };
 
-// POST /admin/complaints/:id/delete - Delete complaint record
+// POST or DELETE /api/admin/complaints/:id/delete
 exports.deleteComplaint = async (req, res) => {
     try {
         const complaintId = req.params.id;
 
         await db.query('DELETE FROM complaints WHERE id = ?', [complaintId]);
 
-        req.session.success = 'Complaint record deleted successfully.';
-        res.redirect('/admin/complaints');
+        return res.json({
+            success: true,
+            message: 'Complaint record deleted successfully.'
+        });
     } catch (error) {
         console.error('Delete Complaint Error:', error);
-        req.session.error = 'Failed to delete complaint record.';
-        res.redirect('/admin/complaints');
+        return res.status(500).json({ success: false, error: 'Failed to delete complaint record.' });
     }
 };
 
 // ---- MANAGE ANNOUNCEMENTS ----
 
-// GET /admin/announcements
+// GET /api/admin/announcements
 exports.listAnnouncements = async (req, res) => {
     try {
         const [announcements] = await db.query(`
@@ -251,25 +256,24 @@ exports.listAnnouncements = async (req, res) => {
             ORDER BY a.created_at DESC
         `);
 
-        res.render('admin/announcements', {
-            title: 'Manage Announcements – Skyline Residency',
+        return res.json({
+            success: true,
             announcements
         });
     } catch (error) {
         console.error('List Announcements Error:', error);
-        res.render('admin/announcements', { title: 'Manage Announcements', announcements: [] });
+        return res.status(500).json({ success: false, error: 'Failed to list announcements.', announcements: [] });
     }
 };
 
-// POST /admin/announcements - Create announcement
+// POST /api/admin/announcements
 exports.createAnnouncement = async (req, res) => {
     try {
         const { title, content, category, priority } = req.body;
         const adminId = req.session.user.id;
 
         if (!title || !content) {
-            req.session.error = 'Title and Content are required for announcements.';
-            return res.redirect('/admin/announcements');
+            return res.status(400).json({ success: false, error: 'Title and Content are required for announcements.' });
         }
 
         await db.query(`
@@ -277,35 +281,37 @@ exports.createAnnouncement = async (req, res) => {
             VALUES (?, ?, ?, ?, ?)
         `, [title.trim(), content.trim(), category || 'General Notice', priority || 'Medium', adminId]);
 
-        req.session.success = 'Announcement broadcasted successfully!';
-        res.redirect('/admin/announcements');
+        return res.json({
+            success: true,
+            message: 'Announcement broadcasted successfully!'
+        });
 
     } catch (error) {
         console.error('Create Announcement Error:', error);
-        req.session.error = 'Failed to broadcast announcement.';
-        res.redirect('/admin/announcements');
+        return res.status(500).json({ success: false, error: 'Failed to broadcast announcement.' });
     }
 };
 
-// POST /admin/announcements/:id/delete
+// POST or DELETE /api/admin/announcements/:id/delete
 exports.deleteAnnouncement = async (req, res) => {
     try {
         const announcementId = req.params.id;
 
         await db.query('DELETE FROM announcements WHERE id = ?', [announcementId]);
 
-        req.session.success = 'Announcement deleted successfully.';
-        res.redirect('/admin/announcements');
+        return res.json({
+            success: true,
+            message: 'Announcement deleted successfully.'
+        });
     } catch (error) {
         console.error('Delete Announcement Error:', error);
-        req.session.error = 'Failed to delete announcement.';
-        res.redirect('/admin/announcements');
+        return res.status(500).json({ success: false, error: 'Failed to delete announcement.' });
     }
 };
 
 // ---- MANAGE RESIDENTS DIRECTORY ----
 
-// GET /admin/users
+// GET /api/admin/users
 exports.listUsers = async (req, res) => {
     try {
         const [users] = await db.query(`
@@ -321,16 +327,16 @@ exports.listUsers = async (req, res) => {
             ORDER BY MAX(created_at) DESC
         `);
 
-        res.render('admin/users', { title: 'Resident Directory – Skyline Residency', users });
+        return res.json({ success: true, users });
     } catch (error) {
         console.error('Admin Users Error:', error);
-        res.render('admin/users', { title: 'Resident Directory', users: [] });
+        return res.status(500).json({ success: false, error: 'Failed to fetch resident directory.', users: [] });
     }
 };
 
 // ---- REPORTS & CSV/PDF EXPORT ----
 
-// GET /admin/export/csv
+// GET /admin/export/csv - Stream CSV file download directly
 exports.exportCSV = async (req, res) => {
     try {
         const [complaints] = await db.query(`
@@ -368,13 +374,12 @@ exports.exportCSV = async (req, res) => {
         res.send(csvContent);
     } catch (error) {
         console.error('CSV Export Error:', error);
-        req.session.error = 'Failed to export CSV report.';
-        res.redirect('/admin/reports');
+        res.status(500).send('Failed to export CSV report.');
     }
 };
 
-// GET /admin/export/pdf
-exports.exportPDF = async (req, res) => {
+// GET /api/admin/export/pdf-data - Return data for PDF report page
+exports.exportPDFData = async (req, res) => {
     try {
         const [complaints] = await db.query(`
             SELECT c.complaint_id, c.resident_name, c.title, c.category,
@@ -393,20 +398,19 @@ exports.exportPDF = async (req, res) => {
             FROM complaints
         `);
 
-        res.render('admin/export-pdf', {
-            title: 'Maintenance Audit Summary – Skyline Residency',
+        return res.json({
+            success: true,
             complaints,
             stats: stats[0],
             generatedAt: new Date().toLocaleString('en-IN')
         });
     } catch (error) {
-        console.error('PDF Export Error:', error);
-        req.session.error = 'Failed to generate PDF audit report.';
-        res.redirect('/admin/reports');
+        console.error('PDF Export Data Error:', error);
+        return res.status(500).json({ success: false, error: 'Failed to generate PDF audit data.' });
     }
 };
 
-// GET /admin/reports
+// GET /api/admin/reports - Analytics & reports page data
 exports.reports = async (req, res) => {
     try {
         const [stats] = await db.query(`
@@ -455,8 +459,8 @@ exports.reports = async (req, res) => {
             LIMIT 10
         `);
 
-        res.render('admin/reports', {
-            title: 'Analytics & Maintenance Reports – Skyline Residency',
+        return res.json({
+            success: true,
             stats: stats[0],
             byCategory,
             byDepartment,
@@ -465,9 +469,10 @@ exports.reports = async (req, res) => {
             recentResolved
         });
     } catch (error) {
-        console.error('Reports Error:', error);
-        res.render('admin/reports', {
-            title: 'Analytics & Reports',
+        console.error('Reports API Error:', error);
+        return res.status(500).json({
+            success: false,
+            error: 'Failed to fetch analytics and report metrics.',
             stats: {},
             byCategory: [],
             byDepartment: [],

@@ -9,8 +9,11 @@ const isAdmin = (req, res, next) => {
     if (req.session && req.session.user && req.session.user.role === 'admin') {
         return next(); // Admin is logged in
     }
-    req.session.error = 'Access denied. Society Manager administrator privileges required.';
+    if (req.originalUrl.startsWith('/api') || req.path.startsWith('/api')) {
+        return res.status(401).json({ success: false, error: 'Access denied. Society Manager administrator privileges required.' });
+    }
     res.redirect('/admin/login');
 };
+
 
 module.exports = { isAdmin };

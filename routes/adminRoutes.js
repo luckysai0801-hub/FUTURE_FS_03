@@ -1,6 +1,6 @@
 // =============================================
 // routes/adminRoutes.js
-// Handles Society Manager Admin panel routes
+// Handles Society Manager Admin panel REST API endpoints
 // Skyline Residency – Smart Apartment Portal
 // =============================================
 
@@ -9,43 +9,45 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { isAdmin } = require('../middleware/roleMiddleware');
 
-// GET /admin/dashboard - Admin Dashboard with stats
+// GET /api/admin/dashboard - Admin Dashboard stats & data
 router.get('/dashboard', isAdmin, adminController.dashboard);
 
-// GET /admin/complaints - List all apartment complaints
+// GET /api/admin/complaints - List & filter apartment complaints
 router.get('/complaints', isAdmin, adminController.listComplaints);
 
-// GET /admin/complaints/:id - View complaint details & update status
+// GET /api/admin/complaints/:id - View single complaint & timeline
 router.get('/complaints/:id', isAdmin, adminController.complaintDetail);
 
-// POST /admin/complaints/:id/update-status - Update complaint status
-router.post('/complaints/:id/update-status', isAdmin, adminController.updateStatus);
+// POST /api/admin/complaints/:id/status - Update complaint status
+router.post('/complaints/:id/status', isAdmin, adminController.updateStatus);
 
-// POST /admin/complaints/:id/update-details - Update complaint details (assign staff, remarks)
-router.post('/complaints/:id/update-details', isAdmin, adminController.updateDetails);
+// POST /api/admin/complaints/:id/details - Update assigned staff & remarks
+router.post('/complaints/:id/details', isAdmin, adminController.updateDetails);
 
-// POST /admin/complaints/:id/delete - Delete a complaint record
+// POST & DELETE /api/admin/complaints/:id/delete - Delete complaint
 router.post('/complaints/:id/delete', isAdmin, adminController.deleteComplaint);
+router.delete('/complaints/:id', isAdmin, adminController.deleteComplaint);
 
-// GET /admin/announcements - Manage announcements
+// GET /api/admin/announcements - Manage announcements
 router.get('/announcements', isAdmin, adminController.listAnnouncements);
 
-// POST /admin/announcements - Create a new announcement
+// POST /api/admin/announcements - Create new announcement
 router.post('/announcements', isAdmin, adminController.createAnnouncement);
 
-// POST /admin/announcements/:id/delete - Delete announcement
+// POST & DELETE /api/admin/announcements/:id/delete - Delete announcement
 router.post('/announcements/:id/delete', isAdmin, adminController.deleteAnnouncement);
+router.delete('/announcements/:id', isAdmin, adminController.deleteAnnouncement);
 
-// GET /admin/users - Manage resident directory
+// GET /api/admin/users - Resident directory
 router.get('/users', isAdmin, adminController.listUsers);
 
-// GET /admin/export/csv - Download CSV report
+// GET /admin/export/csv - Stream CSV file download
 router.get('/export/csv', isAdmin, adminController.exportCSV);
 
-// GET /admin/export/pdf - Print-ready PDF report
-router.get('/export/pdf', isAdmin, adminController.exportPDF);
+// GET /api/admin/export/pdf-data - Return JSON data for PDF report page
+router.get('/export/pdf-data', isAdmin, adminController.exportPDFData);
 
-// GET /admin/reports - Analytics & reports page
+// GET /api/admin/reports - Analytics & reports metrics
 router.get('/reports', isAdmin, adminController.reports);
 
 module.exports = router;

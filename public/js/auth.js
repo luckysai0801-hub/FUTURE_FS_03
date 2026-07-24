@@ -1,66 +1,68 @@
 // =============================================
-// auth.js - Resident & Admin Authentication Scripts
+// public/js/auth.js
+// Handles Admin Login Form Submission & Authentication via REST API
 // Skyline Residency – Smart Apartment Portal
 // =============================================
 
-function togglePassword(fieldId) {
-    const field = document.getElementById(fieldId);
-    const icon = document.getElementById(fieldId + '-icon');
-    if (!field || !icon) return;
-    if (field.type === 'password') {
-        field.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-        field.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    if (!adminLoginForm) return;
 
-document.addEventListener('DOMContentLoaded', function () {
+    adminLoginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    const passwordField = document.getElementById('password');
-    const strengthBar = document.getElementById('passwordStrength');
-    if (passwordField && strengthBar) {
-        passwordField.addEventListener('input', function () {
-            const val = this.value;
-            strengthBar.innerHTML = '';
-            if (!val) return;
+        const alertContainer = document.getElementById('loginAlert');
+        const submitBtn = document.getElementById('loginSubmitBtn');
 
-            let strength = 0;
-            if (val.length >= 6) strength++;
-            if (val.length >= 10) strength++;
-            if (/[A-Z]/.test(val)) strength++;
-            if (/[0-9]/.test(val)) strength++;
-            if (/[^A-Za-z0-9]/.test(val)) strength++;
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
 
-            const bar = document.createElement('div');
-            bar.classList.add('strength-bar');
-            if (strength <= 2) {
-                bar.classList.add('strength-weak');
-            } else if (strength <= 3) {
-                bar.classList.add('strength-medium');
+        if (!email || !password) {
+            showAlert('Please enter both email and password.', 'error');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                showAlert(data.message || 'Login successful! Redirecting to dashboard...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/dashboard.html';
+                }, 800);
             } else {
-                bar.classList.add('strength-strong');
+                showAlert(data.error || 'Invalid credentials.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Sign In to Admin Panel';
             }
-            strengthBar.appendChild(bar);
-        });
-    }
-
-    const confirmField = document.getElementById('confirm_password');
-    const matchDiv = document.getElementById('passwordMatch');
-    if (confirmField && matchDiv && passwordField) {
-        confirmField.addEventListener('input', function () {
-            if (this.value === '') {
-                matchDiv.textContent = '';
-                return;
-            }
-            if (this.value === passwordField.value) {
-                matchDiv.textContent = '✓ Passwords match';
-                matchDiv.className = 'password-match match-ok';
-            } else {
-                matchDiv.textContent = '✗ Passwords do not match';
-                matchDiv.className = 'password-match match-fail';
-            }
-        });
-    }
+        } catch (error) {
+            console.error('Login error:', error);
+            showAlert('A network error occurred. Please try again.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Sign In to Admin Panel';
+        }
+    });
 });
+
+function showAlert(message, type = 'error') {
+    const container = document.getElementById('loginAlert');
+    if (!container) return;
+
+    const isSuccess = type === 'success';
+    container.style.display = 'block';
+    container.innerHTML = `
+        <div style="background: ${isSuccess ? '#D1FAE5' : '#FEE2E2'}; color: ${isSuccess ? '#059669' : '#DC2626'}; border: 1px solid ${isSuccess ? '#A7F3D0' : '#FECACA'}; padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+            <div><i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="margin-right: 8px;"></i> ${message}</div>
+            <button onclick="this.parentElement.parentElement.style.display='none'" style="background: none; border: none; cursor: pointer; color: inherit;"><i class="fas fa-times"></i></button>
+        </div>
+    `;
+}

@@ -41,8 +41,13 @@ CREATE TABLE IF NOT EXISTS complaints (
     admin_remarks   TEXT,
     assigned_to     VARCHAR(100),
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_complaints_status (status),
+    INDEX idx_complaints_category (category),
+    INDEX idx_complaints_priority (priority),
+    INDEX idx_complaints_created (created_at)
 );
+
 
 -- =============================================
 -- TABLE 3: complaint_updates (Admin Audit Log)

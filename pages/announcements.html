@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society Announcements – Skyline Residency</title>
+    <meta name="description" content="Official announcements, maintenance notices, and general updates from Skyline Residency Society Management.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Dynamic Navbar Container -->
+<div id="app-navbar"></div>
+
+<main class="main-content" style="padding: 3rem 0; background: var(--bg);">
+    <div class="container">
+        
+        <!-- Header -->
+        <div class="page-header" style="text-align: center; margin-bottom: 2.5rem;">
+            <span class="badge badge-in-progress" style="font-size: 0.85rem; padding: 0.4rem 1rem; margin-bottom: 0.75rem; display: inline-block;">
+                <i class="fas fa-bullhorn"></i> Official Notice Board
+            </span>
+            <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem;">Society Announcements & Alerts</h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                Stay updated with the latest community notices, scheduled maintenance work, and society announcements.
+            </p>
+        </div>
+
+        <div style="max-width: 850px; margin: 0 auto;">
+            
+            <div id="announcementsList" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p style="margin-top: 1rem;">Loading official announcements...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<!-- Dynamic Footer Container -->
+<div id="app-footer"></div>
+
+<!-- Client Scripts -->
+<script src="/js/components.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', loadAnnouncements);
+
+async function loadAnnouncements() {
+    const container = document.getElementById('announcementsList');
+    try {
+        const res = await fetch('/api/announcements');
+        const data = await res.json();
+
+        if (!data.success || !data.announcements || data.announcements.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="background: white; padding: 3rem; text-align: center; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <div style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"><i class="fas fa-bell-slash"></i></div>
+                    <h3>No Active Announcements</h3>
+                    <p style="color: var(--text-muted);">There are no broadcast notices at this time. Please check back later.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = data.announcements.map(item => {
+            let priorityBadgeClass = 'badge-in-progress';
+            if (item.priority === 'High') priorityBadgeClass = 'badge-rejected';
+            if (item.priority === 'Low') priorityBadgeClass = 'badge-resolved';
+
+            const createdDate = new Date(item.created_at).toLocaleDateString('en-IN', {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            return `
+                <article class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 2rem; border-left: 5px solid ${item.priority === 'High' ? '#EF4444' : '#1E3A8A'};">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span class="badge ${priorityBadgeClass}">${item.priority || 'Medium'} Priority</span>
+                            <span class="badge" style="background: var(--primary-light); color: var(--primary); font-size: 0.8rem;">
+                                ${item.category || 'General Notice'}
+                            </span>
+                        </div>
+                        <small style="color: var(--text-muted); font-size: 0.85rem;">
+                            <i class="far fa-clock"></i> ${createdDate}
+                        </small>
+                    </div>
+
+                    <h3 style="font-size: 1.35rem; color: var(--primary); margin-bottom: 0.75rem;">
+                        ${item.title}
+                    </h3>
+
+                    <div style="color: var(--text-dark); line-height: 1.65; font-size: 0.98rem; margin-bottom: 1.25rem; white-space: pre-line;">
+                        ${item.content}
+                    </div>
+
+                    <div style="font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-shield" style="color: var(--primary);"></i>
+                        <span>Issued by <strong>${item.author_name || 'Society Manager Administration'}</strong></span>
+                    </div>
+                </article>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error('Failed to load announcements:', err);
+        container.innerHTML = `
+            <div class="card" style="background: white; padding: 2rem; text-align: center; color: #DC2626;">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                <p style="margin-top: 0.5rem;">Error loading announcements. Please try refreshing the page.</p>
+            </div>
+        `;
+    }
+}
+</script>
+</body>
+</html>

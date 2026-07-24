@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Complaint – Skyline Residency</title>
+    <meta name="description" content="Submit maintenance request or complaint ticket for Skyline Residency apartment units. Fast dispatch and real-time status tracking.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/complaints.css">
+</head>
+<body>
+
+<!-- Dynamic Navbar Container -->
+<div id="app-navbar"></div>
+
+<main class="main-content" style="padding: 3rem 0; background: var(--bg);">
+    <div class="container">
+        
+        <div class="page-header" style="text-align: center; margin-bottom: 2.5rem;">
+            <span class="badge badge-pending" style="font-size: 0.85rem; padding: 0.4rem 1rem; margin-bottom: 0.75rem; display: inline-block;">
+                <i class="fas fa-shield-halved"></i> Public Maintenance Portal
+            </span>
+            <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem;">Submit Maintenance Ticket</h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                Fill out the resident maintenance form below. An automated Complaint ID will be generated immediately for live status tracking.
+            </p>
+        </div>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            
+            <!-- Alert Message Box -->
+            <div id="alertContainer" style="display: none; margin-bottom: 1.5rem;"></div>
+
+            <!-- Success Card Modal (Hidden by default) -->
+            <div id="successCard" style="display: none; background: #ECFDF5; border: 2px solid #10B981; padding: 2rem; border-radius: var(--radius-md); text-align: center; margin-bottom: 2rem;">
+                <div style="font-size: 3rem; color: #10B981; margin-bottom: 1rem;">
+                    <i class="fas fa-circle-check"></i>
+                </div>
+                <h3 style="color: #065F46; font-size: 1.6rem; margin-bottom: 0.5rem;">Complaint Registered Successfully!</h3>
+                <p style="color: #047857; margin-bottom: 1.5rem;">
+                    Your maintenance ticket has been dispatched to society administration.
+                </p>
+                <div style="background: white; padding: 1.25rem; border-radius: var(--radius-sm); border: 1px dashed #10B981; display: inline-block; margin-bottom: 1.5rem;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">YOUR COMPLAINT TICKET ID</span>
+                    <strong id="generatedId" style="font-size: 1.8rem; color: var(--primary); font-family: monospace;">CMP-2026-XXXXXX</strong>
+                </div>
+                <div>
+                    <a id="trackLinkBtn" href="/track.html" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+                        <i class="fas fa-magnifying-glass"></i> Track Ticket Status Now
+                    </a>
+                    <button type="button" onclick="resetForm()" class="btn btn-outline-primary" style="margin-left: 0.5rem;">
+                        <i class="fas fa-plus"></i> Submit Another Request
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Container Card -->
+            <div class="card" id="formCard" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 2.5rem;">
+                <form id="complaintForm" enctype="multipart/form-data">
+                    
+                    <h3 style="font-size: 1.25rem; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
+                        <i class="fas fa-user-gear"></i> 1. Resident & Flat Location Details
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label for="resident_name" class="form-label">Full Resident Name <span style="color:red;">*</span></label>
+                            <input type="text" id="resident_name" name="resident_name" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobile_number" class="form-label">10-Digit Mobile Number <span style="color:red;">*</span></label>
+                            <input type="tel" id="mobile_number" name="mobile_number" class="form-control" placeholder="e.g. 9876543210" maxlength="10" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label for="block_wing" class="form-label">Tower / Block Wing <span style="color:red;">*</span></label>
+                            <select id="block_wing" name="block_wing" class="form-control" required>
+                                <option value="" disabled selected>Select Tower Block</option>
+                                <option value="Tower A">Tower A</option>
+                                <option value="Tower B">Tower B</option>
+                                <option value="Tower C">Tower C</option>
+                                <option value="Tower D">Tower D</option>
+                                <option value="Tower E">Tower E</option>
+                                <option value="Tower F">Tower F</option>
+                                <option value="Clubhouse / Common Area">Clubhouse / Common Area</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="flat_number" class="form-label">Flat / Unit Number <span style="color:red;">*</span></label>
+                            <input type="text" id="flat_number" name="flat_number" class="form-control" placeholder="e.g. Flat A-402" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label for="email" class="form-label">Email Address (Optional for e-updates)</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="e.g. resident@example.com">
+                    </div>
+
+                    <h3 style="font-size: 1.25rem; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
+                        <i class="fas fa-triangle-exclamation"></i> 2. Issue Categorization & Description
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label for="category" class="form-label">Maintenance Category <span style="color:red;">*</span></label>
+                            <select id="category" name="category" class="form-control" required>
+                                <option value="" disabled selected>Select Issue Category</option>
+                                <option value="Water Leakage">Water Leakage</option>
+                                <option value="Electrical Issue">Electrical Issue</option>
+                                <option value="Lift Problem">Lift Problem</option>
+                                <option value="Parking Issue">Parking Issue</option>
+                                <option value="Security Complaint">Security Complaint</option>
+                                <option value="Housekeeping">Housekeeping</option>
+                                <option value="Garbage Collection">Garbage Collection</option>
+                                <option value="Water Supply">Water Supply</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Garden Maintenance">Garden Maintenance</option>
+                                <option value="Street Lighting">Street Lighting</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priority" class="form-label">Urgency Level <span style="color:red;">*</span></label>
+                            <select id="priority" name="priority" class="form-control" required>
+                                <option value="Low">Low – Routine upkeep</option>
+                                <option value="Medium" selected>Medium – Normal fix needed</option>
+                                <option value="High">High – Urgent / Hazard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="title" class="form-label">Short Issue Summary / Subject <span style="color:red;">*</span></label>
+                        <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Master bathroom pipe leakage near ceiling" maxlength="150" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="description" class="form-label">Detailed Description of Problem <span style="color:red;">*</span> <small class="text-muted">(Min 20 characters)</small></label>
+                        <textarea id="description" name="description" class="form-control" rows="4" placeholder="Please provide specific details about the issue, exact room/area, timing, and any relevant notes..." minlength="20" required></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label for="image" class="form-label">Attach Photo Evidence (Optional)</label>
+                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                        <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">Supported formats: JPG, PNG, WEBP (Max size: 5MB)</small>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fas fa-rotate-left"></i> Reset Form
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+                            <i class="fas fa-paper-plane"></i> Submit Ticket Now
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- Dynamic Footer Container -->
+<div id="app-footer"></div>
+
+<!-- Client Scripts -->
+<script src="/js/components.js"></script>
+<script src="/js/complaints.js"></script>
+</body>
+</html>

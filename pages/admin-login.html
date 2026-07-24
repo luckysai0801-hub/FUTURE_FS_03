@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society Manager Login – Skyline Residency</title>
+    <meta name="description" content="Society Manager Administration Login for Skyline Residency Smart Apartment Management Portal.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+
+<!-- Dynamic Navbar Container -->
+<div id="app-navbar"></div>
+
+<main class="main-content" style="padding: 4rem 0; background: var(--bg); min-height: calc(100vh - 200px); display: flex; align-items: center;">
+    <div class="container">
+        
+        <div style="max-width: 480px; margin: 0 auto;">
+            
+            <!-- Login Card -->
+            <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 2.5rem;">
+                
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1rem auto;">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h2 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 0.25rem;">Society Manager Login</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Administrative Portal Access</p>
+                </div>
+
+                <!-- Alert Box -->
+                <div id="loginAlert" style="display: none; margin-bottom: 1.25rem;"></div>
+
+                <form id="adminLoginForm">
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="email" class="form-label">Admin Email Address</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-envelope" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            <input type="email" id="email" name="email" class="form-control" style="padding-left: 2.5rem;" placeholder="admin@skylineresidency.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="password" class="form-label">Password</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-key" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            <input type="password" id="password" name="password" class="form-control" style="padding-left: 2.5rem;" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; font-weight: 600;">
+                        <i class="fas fa-right-to-bracket"></i> Sign In to Admin Panel
+                    </button>
+                </form>
+
+                <!-- Credentials Helper Info Card -->
+                <div style="margin-top: 2rem; padding: 1rem; background: var(--primary-light); border-radius: var(--radius-sm); border: 1px solid rgba(30,58,138,0.15); font-size: 0.85rem; color: var(--primary);">
+                    <strong><i class="fas fa-info-circle"></i> Default Credentials:</strong>
+                    <div style="margin-top: 0.35rem;">
+                        Email: <code>admin@skylineresidency.com</code><br>
+                        Password: <code>admin123</code>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</main>
+
+<!-- Dynamic Footer Container -->
+<div id="app-footer"></div>
+
+<!-- Client Scripts -->
+<script src="/js/components.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

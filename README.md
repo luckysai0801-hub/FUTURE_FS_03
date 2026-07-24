@@ -111,21 +111,18 @@ Visit the application at: **`http://localhost:3000`**
 
 ```
 skyline-residency-portal/
+├── pages/            (Static HTML pages: index, complaint, track, announcements, contact, admin-login, dashboard, admin-complaints, admin-complaint-detail, admin-announcements, admin-users, admin-reports, admin-export-pdf, 404)
 ├── public/
 │   ├── css/          (style.css, auth.css, dashboard.css, admin.css, complaints.css)
-│   ├── js/           (main.js, auth.js, complaints.js, admin.js)
+│   ├── js/           (main.js, auth.js, complaints.js, admin.js, components.js)
 │   └── uploads/      (maintenance images saved here)
 ├── routes/           (authRoutes, complaintRoutes, adminRoutes)
 ├── controllers/      (authController, complaintController, adminController)
 ├── middleware/       (authMiddleware, roleMiddleware, uploadMiddleware)
 ├── config/           (db.js - MySQL connection pool)
-├── views/            (EJS views)
-│   ├── auth/         (login.ejs, register.ejs, admin-login.ejs)
-│   ├── user/         (dashboard, new-complaint, my-complaints, complaint-detail, profile)
-│   ├── admin/        (dashboard, complaints, users, reports, export-pdf)
-│   └── partials/     (navbar, footer, sidebar, admin-sidebar)
 ├── .env              (Environment variables)
 ├── server.js         (Express application entry point)
 ├── database.sql      (MySQL schema and seed data)
 └── README.md
 ```
+

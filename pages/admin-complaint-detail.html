@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspection & Resolution – Skyline Residency</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏢</text></svg>">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/complaints.css">
+</head>
+<body class="admin-body">
+
+<!-- Dynamic Navbar Container -->
+<div id="app-navbar"></div>
+
+<div class="admin-layout">
+    
+    <!-- Dynamic Admin Sidebar Container -->
+    <div id="app-admin-sidebar"></div>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+        
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <a href="/admin-complaints.html" class="btn btn-sm btn-outline-primary" style="margin-bottom: 0.5rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-arrow-left"></i> Back to Complaints Queue
+                </a>
+                <h1 style="font-size: 1.8rem; color: var(--primary); margin: 0;">Inspection & Resolution Workspace</h1>
+            </div>
+            <button id="deleteTicketBtn" class="btn btn-sm btn-outline-danger">
+                <i class="fas fa-trash-can"></i> Delete Record
+            </button>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="detailAlert" style="display: none; margin-bottom: 1.5rem;"></div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            
+            <!-- LEFT COLUMN: Ticket Details & Action Forms -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <!-- Ticket Info Card -->
+                <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.75rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem;">
+                        <div>
+                            <span id="detailIdBadge" style="font-size: 1.1rem; font-family: monospace; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 0.35rem 0.75rem; border-radius: var(--radius-sm);">
+                                CMP-2026-XXXXXX
+                            </span>
+                            <h2 id="detailTitle" style="font-size: 1.35rem; margin-top: 0.5rem; color: var(--text-dark);">-</h2>
+                        </div>
+                        <div>
+                            <span id="detailStatusBadge" class="badge badge-pending" style="font-size: 1rem; padding: 0.4rem 1rem;">Pending</span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.9rem;">
+                        <div>
+                            <span style="color: var(--text-muted); display: block;">Resident Name:</span>
+                            <strong id="detailResident">-</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-muted); display: block;">Mobile Contact:</span>
+                            <strong id="detailMobile">-</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-muted); display: block;">Email:</span>
+                            <strong id="detailEmail">-</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-muted); display: block;">Location / Flat:</span>
+                            <strong id="detailLocation">-</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-muted); display: block;">Category:</span>
+                            <strong id="detailCategory">-</strong>
+                        </div>
+                        <div>
+                            <span style="color: var(--text-muted); display: block;">Priority:</span>
+                            <strong id="detailPriority">-</strong>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--text-muted); display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Description:</span>
+                        <div id="detailDescription" style="background: var(--bg); padding: 0.85rem; border-radius: var(--radius-sm); font-size: 0.92rem; line-height: 1.6;">-</div>
+                    </div>
+
+                    <div id="detailImageSection" style="display: none; margin-top: 1rem;">
+                        <span style="color: var(--text-muted); display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Photo Attachment:</span>
+                        <a id="detailImageLink" href="#" target="_blank">
+                            <img id="detailImage" src="" alt="Ticket Attachment" style="max-width: 100%; max-height: 250px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- UPDATE STATUS FORM CARD -->
+                <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.75rem;">
+                    <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
+                        <i class="fas fa-pen-to-square"></i> Update Ticket Status
+                    </h3>
+
+                    <form id="updateStatusForm">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label">Target Maintenance Status</label>
+                            <select id="new_status" name="new_status" class="form-control" required>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label class="form-label">Manager Remarks & Resolution Notes</label>
+                            <textarea id="statusRemarks" name="remarks" class="form-control" rows="3" placeholder="Enter inspection details, work order updates, or resolution notes for resident visibility..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-floppy-disk"></i> Save Status & Append Audit Trail
+                        </button>
+                    </form>
+                </div>
+
+                <!-- STAFF ASSIGNMENT FORM CARD -->
+                <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.75rem;">
+                    <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
+                        <i class="fas fa-user-gear"></i> Staff Assignment & Internal Notes
+                    </h3>
+
+                    <form id="updateDetailsForm">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label">Assigned Maintenance Technician / Vendor</label>
+                            <input type="text" id="assigned_to" name="assigned_to" class="form-control" placeholder="e.g. Senior Plumber Ramesh Kumar / Otis Maintenance">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label class="form-label">Internal Admin Remarks</label>
+                            <textarea id="admin_remarks" name="admin_remarks" class="form-control" rows="2" placeholder="Administrative notes..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-primary" style="width: 100%;">
+                            <i class="fas fa-check"></i> Save Staff Assignment
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Audit Trail History -->
+            <div>
+                <div class="card" style="background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 1.75rem;">
+                    <h3 style="font-size: 1.15rem; color: var(--primary); margin-bottom: 1.25rem; border-bottom: 2px solid var(--primary-light); padding-bottom: 0.5rem;">
+                        <i class="fas fa-clock-rotate-left"></i> Status Change Audit History
+                    </h3>
+
+                    <div id="detailUpdatesTimeline">
+                        <p style="color: var(--text-muted);">Loading audit timeline...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+<!-- Dynamic Footer Container -->
+<div id="app-footer"></div>
+
+<!-- Client Scripts -->
+<script src="/js/components.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
