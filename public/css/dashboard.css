@@ -141,8 +141,12 @@ body.dashboard-body {
 }
 
 /* MAIN CONTENT */
-.main-content {
+.admin-layout .main-content {
   margin-left: 260px; flex: 1; padding: 2rem 2.5rem; min-height: 100vh;
+}
+
+.main-content {
+  flex: 1; padding: 3rem 0; min-height: calc(100vh - 74px);
 }
 
 .topbar {

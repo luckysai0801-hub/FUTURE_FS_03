@@ -164,21 +164,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (footerContainer) {
         footerContainer.innerHTML = `
             <footer class="footer">
-                <div class="footer-container">
-                    <div class="footer-brand">
-                        <i class="fas fa-building-user"></i>
-                        <span>Skyline Residency</span>
+                <div class="container">
+                    <div class="footer-grid">
+                        <div class="footer-brand-col">
+                            <div class="footer-brand">
+                                <i class="fas fa-building-user"></i>
+                                <span>Skyline Residency</span>
+                            </div>
+                            <p class="footer-text">
+                                Premium Smart Apartment Portal for resident complaint management, maintenance dispatch, and community announcements.
+                            </p>
+                        </div>
+
+                        <div class="footer-col">
+                            <h4>Quick Links</h4>
+                            <ul class="footer-links">
+                                <li><a href="/index.html"><i class="fas fa-angle-right"></i> Home Portal</a></li>
+                                <li><a href="/complaint.html"><i class="fas fa-angle-right"></i> Submit Ticket</a></li>
+                                <li><a href="/track.html"><i class="fas fa-angle-right"></i> Track Status</a></li>
+                                <li><a href="/announcements.html"><i class="fas fa-angle-right"></i> Notices</a></li>
+                                <li><a href="/contact.html"><i class="fas fa-angle-right"></i> Support</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-col">
+                            <h4>Management</h4>
+                            <ul class="footer-links">
+                                <li><a href="/admin-login.html"><i class="fas fa-angle-right"></i> Admin Login</a></li>
+                                <li><a href="/dashboard.html"><i class="fas fa-angle-right"></i> Dashboard</a></li>
+                                <li><a href="/admin-complaints.html"><i class="fas fa-angle-right"></i> Dispatch Queue</a></li>
+                                <li><a href="/admin-reports.html"><i class="fas fa-angle-right"></i> Reports</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-col">
+                            <h4>Office Desk</h4>
+                            <p style="margin-bottom: 0.5rem;"><i class="fas fa-location-dot"></i> Clubhouse L1, Skyline Ave</p>
+                            <p style="margin-bottom: 0.5rem;"><i class="fas fa-phone"></i> +91 98765 43210</p>
+                            <p><i class="fas fa-envelope"></i> helpdesk@skylineresidency.com</p>
+                        </div>
                     </div>
-                    <p class="footer-text">
-                        Premium Smart Apartment Portal for resident complaint management, maintenance dispatch, and community announcements.
-                    </p>
-                    <div class="footer-links">
-                        <a href="/index.html">Home</a>
-                        <a href="/complaint.html">Submit Ticket</a>
-                        <a href="/track.html">Track Status</a>
-                        <a href="/announcements.html">Notices</a>
-                        <a href="/contact.html">Contact</a>
-                        <a href="/admin-login.html">Admin Login</a>
+
+                    <div class="footer-bottom">
+                        <p>&copy; ${new Date().getFullYear()} Skyline Residency Association. All Rights Reserved.</p>
+                        <div>
+                            <a href="#" style="color: #94A3B8; margin-left: 1rem;">Privacy Policy</a>
+                            <a href="#" style="color: #94A3B8; margin-left: 1rem;">Terms of Service</a>
+                        </div>
                     </div>
                 </div>
             </footer>
