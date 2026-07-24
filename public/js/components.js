@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentUser = null;
     try {
         const res = await fetch('/api/auth/check');
-        const data = await res.json();
-        if (data.authenticated && data.user) {
-            currentUser = data.user;
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.authenticated && data.user) {
+                currentUser = data.user;
+            }
         }
     } catch (e) {
         console.warn('Auth check skipped or failed:', e);

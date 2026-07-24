@@ -106,7 +106,8 @@ async function initDatabase() {
 pool.getConnection((err, connection) => {
     if (err) {
         console.error('❌ Database connection failed:', err.message);
-        console.error('   Make sure MySQL is running and credentials in .env are correct');
+        console.error(`   Attempted target: ${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '3306'}`);
+        console.error('   Make sure DB credentials and DB_PORT are set, and Aiven IP Filter allows 0.0.0.0/0');
     } else {
         console.log('✅ Skyline Residency DB connected successfully!');
         connection.release(); // release back to pool
